@@ -1,0 +1,92 @@
+doctype html
+html
+	head
+		title User Login
+		link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css')
+		style.
+			body {
+			font-family: Arial, sans-serif;
+			background-color: #f7f7f7;
+			margin: 0;
+			padding: 0;
+			}
+			.login-container {
+			max-width: 400px;
+			margin: 100px auto;
+			padding: 20px;
+			background-color: #ffffff;
+			border-radius: 5px;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+			}
+			.login-container h1 {
+			text-align: center;
+			color: #333333;
+			}
+			.login-form label {
+			display: block;
+			margin-bottom: 10px;
+			color: #333333;
+			}
+			.login-form input[type="text"],
+			.login-form input[type="password"] {
+			width: 100%;
+			padding: 10px;
+			margin-bottom: 20px;
+			border: 1px solid #cccccc;
+			border-radius: 5px;
+			font-size: 16px;
+			}
+			.login-form input[type="submit"] {
+			width: 100%;
+			padding: 10px;
+			background-color: #007bff;
+			color: #ffffff;
+			border: none;
+			border-radius: 5px;
+			font-size: 16px;
+			cursor: pointer;
+			}
+			.login-form input[type="submit"]:hover {
+			background-color: #0056b3;
+			}
+	body
+		.login-container
+			h1 User Login
+			p#error-message(style='color: red; text-align: center; display: none;') Invalid username or password.
+			form#registrationForm.login-form
+				label(for='username') Username:
+				input(type='text' name='username' autocomplete='off' required='')
+				label(for='password') Password:
+				input(type='password' name='password' autocomplete='off' required='')
+				input(type='submit' value='Login')
+		script(src='https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js')
+		script.
+			document.getElementById('registrationForm').addEventListener('submit', function(e) {
+			e.preventDefault();
+			const formData = new FormData(e.target);
+			const formDataObject = {};
+			formData.forEach((value, key) => {
+			formDataObject[key] = value;
+			});
+			fetch('http://localhost:3000/api/login', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(formDataObject)
+			})
+			.then(response => response.json())
+			.then(data => {
+			console.log(data);
+			if (data.success) {
+				localStorage.setItem('token', data.token);
+				window.location.href = '/dashboard';
+			} else {
+				const errorMessageElement = document.getElementById('error-message');
+				errorMessageElement.style.display = 'block';
+			}
+			})
+			.catch(error => {
+				console.error(error);
+			});
+			});
