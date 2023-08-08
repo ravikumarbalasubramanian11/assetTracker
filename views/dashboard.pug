@@ -26,13 +26,15 @@ style.
     }
 body
   h3.bg-secondary.py-3.px-2.text-light Asset Tracker
-  .container-fluid
-    .row
-      .col-12
-        button#myModal.btn.btn-secondary Create Device
   .container
-    .row  
-      .col-12
+    .row.py-2
+      .col-12 
+        button#raiseRequestBtn.btn.btn-primary Raise a Request
+      .col-6
+        h3 Asset Management
+      .col-6.d-flex.flex-row.justify-content-end.text-end
+        button#myModal.btn.btn-secondary Create Device
+      .col-12.my-3
         table#myTable
           thead
             tr
@@ -43,10 +45,82 @@ body
               th Vendor Details
               th Purchase Date
               th Specification
+              th Assigned to
               th Status
               <th class="admin-only">Action</th>
           tbody
-    .modal.fade#exampleModal(tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true")
+  #editModal.modal(tabindex='-1' role='dialog')
+    .modal-dialog(role='document')
+      .modal-content
+        .modal-header
+          h5.modal-title Edit Device
+          button.close(type='button' data-dismiss='modal' aria-label='Close')
+            span(aria-hidden='true') ×
+        .modal-body
+          form
+            .form-group
+              label(for='assetId') Asset ID
+              input#assetId.form-control(type='text')
+            .form-group
+              label(for='assetName') Asset Name
+              input#assetName.form-control(type='text')
+            .form-group
+              label(for='manufacturer') Manufacturer
+              input#manufacturer.form-control(type='text')
+            .form-group
+              label(for='purchaseDate') Purchase Date
+              input#purchaseDate.form-control(type='date')
+            .form-group
+              label(for='vendorDetails') Vendor Details
+              input#vendorDetails.form-control(type='text')
+            .form-group
+              label(for='specification') Specification
+              textarea#specification.form-control(rows='4')
+            .form-group
+              label(for='status') Status
+              select#status.form-control(name='status')
+                option(value='Active') Active
+                option(value='Inactive') Inactive
+                option(value='UnderService') UnderService
+        .modal-footer
+          button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+          button#saveEdit.btn.btn-primary(type='button') Save Changes
+
+  #requestModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='requestModalLabel' aria-hidden='true')
+    .modal-dialog(role='document')
+      .modal-content
+        .modal-header
+          h5#requestModalLabel.modal-title Raise a Request
+          button.close(type='button' data-dismiss='modal' aria-label='Close')
+            span(aria-hidden='true') ×
+        .modal-body
+          .form-group
+            label(for='requestType') Request Type
+            select#requestType.form-control(required='')
+              option(value='') Select Request Type
+              option(value='1') Request for Asset
+              option(value='2') Request for Service
+          .form-group
+            label(for='assetType') Asset Type
+            select#assetType.form-control(required='')
+              option(value='') Select Asset Type
+              option(value='1') Laptop
+              option(value='2') PC
+          .form-group
+            label(for='presentStatus') Working Status
+            select#presentStatus.form-control(required='')
+              option(value='') Select Present Status
+              option(value='1') Working
+              option(value='2') Not Working
+              option(value='3') Partially Working
+          .form-group
+            label(for='requestDetails') Detail the issue facing
+            textarea#requestDetails.form-control(rows='4' required='')
+        .modal-footer
+          button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+          button#submitRequestBtn.btn.btn-primary(type='button') Submit Request
+
+  .modal.fade#exampleModal(tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true")
       .modal-dialog(role="document")
         .modal-content
           .modal-header
