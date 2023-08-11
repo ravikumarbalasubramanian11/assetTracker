@@ -8,6 +8,9 @@ module.exports = (sequelize, Sequelize) => {
 		assetId: {
 			type: Sequelize.STRING
 		},
+		assetType: {
+			type: Sequelize.INTEGER, // 1: Laptop, 2: PC, 3: Mobile
+		},
 		manufacturer: {
 			type: Sequelize.STRING
 		},

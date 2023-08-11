@@ -56,6 +56,20 @@ exports.get = async (req, res) => {
 	}
 }
 
+exports.inventorySearchId = async (req, res) => {
+	try {
+		const getDetails = await models.Inventory.findAll({
+			attributes: ["id","assetName","assetId","manufacturer","spec","purchaseDate"],
+			where: { UserId: req.params.id }
+		});
+
+		return res.json({ success: true, message: getDetails });
+	} catch (err) {
+		console.error(err);
+		return res.status(500).json({ success: false, message: `Internal Server Error: ${err}` });
+	}
+};
+
 exports.delete = async (req, res) => {
 	try {
 		const deleteRecord = await models.Inventory.destroy({

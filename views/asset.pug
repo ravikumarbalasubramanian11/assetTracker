@@ -1,0 +1,64 @@
+doctype html
+html
+  head
+    title Asset
+    link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css')
+    script(type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js')
+    link(rel='stylesheet' href='https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css')
+    link(href='https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.13.4/b-2.3.6/b-html5-2.3.6/b-print-2.3.6/datatables.min.css' rel='stylesheet')
+    link(href='https://cdn.datatables.net/v/dt/b-2.3.6/b-html5-2.3.6/datatables.css' rel='stylesheet')
+    link(rel='stylesheet' type='text/css' href='https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap.min.css')
+    link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css')
+
+style.
+  table {
+        border-collapse: collapse;
+        border: 1px solid black;
+    }
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border: 1px solid black;
+    }
+    .btn-excel {
+        background-color: green;
+        color: white;
+    }
+body
+  h3.bg-secondary.py-3.px-2.text-light Asset Tracker
+  .container
+    .row.py-2
+      .col-6
+        h3#tableHeading Asset List
+      .col-12.my-3
+        table#myTable
+          thead
+            tr
+              th Id
+              th Asset Name
+              th Asset Id
+              th Manufacturer
+              th Specification
+              th Purchase Date
+              <th class="admin-only">Action</th>
+          tbody
+  #complaintModal.modal.fade
+    .modal-dialog
+        .modal-content
+          .modal-header
+              h5.modal-title Raise Complaint
+              button.close(type='button' data-dismiss='modal') ×
+          .modal-body
+              label(for='complaintSubject') Asset
+              input#complaintSubject.form-control(type='text' placeholder='Complaint Subject' readonly)
+              label(for='complaintDescription') Complaint Description
+              textarea#complaintDescription.form-control(placeholder='Complaint Description')
+          .modal-footer
+              button#submitComplaint.btn.btn-primary Submit
+              button.btn.btn-secondary(type='button' data-dismiss='modal') Cancel
+
+script(type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js')
+script(src='https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js')
+script(type='text/javascript' charset='utf8' src='https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js')
+script(src='https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js')
+script(src='/js/asset.js')

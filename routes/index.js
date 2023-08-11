@@ -46,6 +46,11 @@ router.get('/test', (req, res) => {
 	console.log(`${req.url}`);
 });
 
+router.get('/asset', (req, res) => {
+	res.render('asset');
+	console.log(`${req.url}`);
+});
+
 router.use(express.urlencoded({ extended: true }));
 router.use(express.json());
 

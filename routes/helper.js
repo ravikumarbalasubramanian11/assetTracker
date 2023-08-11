@@ -13,7 +13,8 @@ function requireAuth(req, res, next) {
 		if (!decoded.username || !decoded.id) {
 			return res.status(401).json({ success: false, message: 'Invalid token data' });
 		}
-		res.id = decoded.id;
+		res.locals.id = decoded.id;
+		console.log("Id of the user login = ",res.locals.id)
 		next();
 	} catch (err) {
 		return res.status(401).json({ success: false, message: 'Invalid token', error: err.message });

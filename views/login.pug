@@ -80,6 +80,7 @@ html
 			console.log(data);
 			if (data.success) {
 				localStorage.setItem('token', data.token);
+				localStorage.setItem('username', data.username);
 				window.location.href = '/dashboard';
 			} else {
 				const errorMessageElement = document.getElementById('error-message');

@@ -1,22 +1,21 @@
 const models = require("../../../modals");
+const inventory = require("../../../modals/inventory");
 const { hierarchy } = require("../User/user");
 
 exports.create = async (req, res) => {
 	try {
-		const { requestType, assetType, presentStatus, issue, UserId } = req.body;
+		const { requestType, issue, UserId, InventoryId } = req.body;
 
 		if (![1, 2, 3].includes(Number(requestType))) {
 			return res.status(400).json({ success: false, message: "Invalid requestType" });
 		}
-		if (![1, 2, 3].includes(Number(assetType))) {
-			return res.status(400).json({ success: false, message: "Invalid assetType" });
-		}
-		if (![1, 2, 3].includes(Number(presentStatus))) {
-			return res.status(400).json({ success: false, message: "Invalid presentStatus" });
-		}
 
 		if (issue && typeof issue !== "string") {
 			return res.status(400).json({ success: false, message: "Invalid issue. It must be a string." });
+		}
+
+		if (UserId < 0) {
+			return res.status(400).json({ success: false, message: "Invalid UserId" });
 		}
 
 		const user = await models.User.findOne({ where: { id: UserId } });
@@ -34,7 +33,8 @@ exports.create = async (req, res) => {
 			issue: issue || "", // Use an empty string if issue is not provided
 			stage: hierarchyId,
 			status: 1,
-			UserId: UserId
+			UserId: UserId,
+			InventoryId: InventoryId
 		});
 
 		return res.status(201).json({ success: true, message: "Request created successfully!", data: createdRequest });
@@ -46,11 +46,9 @@ exports.create = async (req, res) => {
 
 exports.getRequest = async (req, res) => {
 	try {
-		const userId = 5; // Change this value to the desired user's ID
-
 		const requests = await models.Request.findAll({
 			where: {
-				stage: userId
+				stage: res.locals.id
 			}
 		});
 
@@ -63,15 +61,68 @@ exports.getRequest = async (req, res) => {
 
 exports.approve = async (req, res) => {
 	try {
-		const id = req.params.id; // Change this value to the desired user's ID
+		const { status } = req.body;
 
-		const requests = await models.Request.update({
-			where: {
-				id: id
+		const id = req.params.id;
+
+		const user = await models.User.findOne({ where: { id: res.locals.id } });
+
+		if (!user) {
+			return res.status(400).json({ success: false, message: "Invalid UserId" });
+		}
+
+		const hierarchyId = user.hierarchyId;
+
+		const request = await models.Request.findOne({ where: { id } });
+
+		if (!(user.id === request.stage)) {
+			return res.status(400).json({ success: false, message: "Invaild to make changes" });
+		}
+
+		if (!request) {
+			return res.status(404).json({ success: false, message: "Request not found" });
+		}
+
+		if (user.username === 'hr') {
+			// HR users can change status to 2 and update the stage
+			if (request.status !== 1) {
+				return res.status(400).json({ success: false, message: "Invalid status change for HR user" });
 			}
-		});
+			const updatedRequest = await models.Request.update(
+				{
+					status: 2,
+					stage: hierarchyId
+				},
+				{
+					where: {
+						id: id,
+						status: 1
+					}
+				}
+			);
 
-		return res.status(200).json({ success: true, data: requests });
+			return res.status(200).json({ success: true, message: "Request approved by HR", data: updatedRequest });
+		} else {
+			// Non-HR users can change status to 3 or 4, but only if the status is 1
+			if (![3, 4].includes(Number(status))) {
+				return res.status(400).json({ success: false, message: "Invalid status change" });
+			}
+
+			const updatedRequest = await models.Request.update(
+				{
+					status: status == null ? request.status : status,
+					stage: hierarchyId
+				},
+				{
+					where: {
+						id: id,
+						status: 1
+					}
+				}
+			);
+
+			return res.status(200).json({ success: true, message: "Request approved", data: updatedRequest });
+		}
 	} catch (err) {
 		console.error("Error:", err);
 		return res.status(500).json({ success: false, error: `Internal Server Error: ${err}` });

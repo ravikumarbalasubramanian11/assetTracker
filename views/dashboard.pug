@@ -25,15 +25,15 @@ style.
         color: white;
     }
 body
-  h3.bg-secondary.py-3.px-2.text-light Asset Tracker
+  h3.bg-secondary.py-3.px-2.text-light Asset Tracker 
   .container
     .row.py-2
       .col-12 
-        button#raiseRequestBtn.btn.btn-primary Raise a Request
+        button#raiseRequestBtn.btn.btn-primary(style='display: none;') Raise a Request
       .col-6
-        h3 Asset Management
+        h3#tableHeading(style='display: none;') Asset Management
       .col-6.d-flex.flex-row.justify-content-end.text-end
-        button#myModal.btn.btn-secondary Create Device
+        button#myModal.btn.btn-secondary(style='display: none;') Create Device
       .col-12.my-3
         table#myTable
           thead

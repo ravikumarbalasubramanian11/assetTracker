@@ -101,7 +101,7 @@ exports.login = async (req, res) => {
 		const token = jwt.sign(payload, secretKey);
 
 		if (isPasswordValid) {
-			return res.status(200).send({ success: true, message: "Successfully login ", token });
+			return res.status(200).send({ success: true, message: "Successfully login ", token, username });
 		}
 	} catch (err) {
 		console.log({ success: false, message: err });
