@@ -106,16 +106,6 @@ body
               option(value='') Select Asset Type
               option(value='1') Laptop
               option(value='2') PC
-          .form-group
-            label(for='presentStatus') Working Status
-            select#presentStatus.form-control(required='')
-              option(value='') Select Present Status
-              option(value='1') Working
-              option(value='2') Not Working
-              option(value='3') Partially Working
-          .form-group
-            label(for='requestDetails') Detail the issue facing
-            textarea#requestDetails.form-control(rows='4' required='')
         .modal-footer
           button.btn.btn-secondary(type='button' data-dismiss='modal') Close
           button#submitRequestBtn.btn.btn-primary(type='button') Submit Request

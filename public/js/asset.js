@@ -22,43 +22,50 @@
 			}
 		]
 	})
+
+	var id;
 	$('#myTable').on('click', '.raise-complaint-btn', function () {
 		var rowData = table.row($(this).closest('tr')).data();
+		id = rowData.id;
 		$('#complaintSubject').val(rowData.assetName);
-		$('#complaintDescription').val(''); // Clear description field if needed
+		$('#complaintDescription').val('');
 		$('#complaintModal').modal('show');
+		console.log('Clicked column id:', id);
 	});
 
-	// When "Submit" button in modal is clicked
-	$('#submitComplaint').on('click', async function () {
+	$('#submitComplaint').on('click', function () {
 		var subject = $('#complaintSubject').val();
 		var description = $('#complaintDescription').val();
+		$.ajax({
+			url: 'http://localhost:3000/api/request/create',
+			method: 'POST',
+			contentType: 'application/json',
+			data: JSON.stringify({
+				subject: subject,
+				issue: description,
+				requestType: 2,
+				InventoryId: id
+			}),
+			headers: {
+				'x-at-sessiontoken': localStorage.getItem('token')
+			},
+			success: function (data, textStatus, jqXHR) {
+				console.log('Complaint submitted successfully', data);
+				alert('Complaint submitted successfully');
+				console.log('Server response:', data);
+			},
+			error: function (jqXHR, textStatus, errorThrown) {
+				console.log('Failed to submit complaint', errorThrown);
+				console.log('Error response data:', jqXHR.responseJSON);
+			}
+		});
 
-		try {
-			$.ajax({
-				url: 'http://localhost:3000/api/request/create',
-				method: 'POST',
-				contentType: 'application/json',
-				data: JSON.stringify({
-					subject: subject,
-					description: description,
-				}),
-				success: function (data, textStatus, jqXHR) {
-					console.log('Complaint submitted successfully', data);
-					// Display an alert or notification here
-					alert('Complaint submitted successfully');
-				},
-				error: function (jqXHR, textStatus, errorThrown) {
-					console.error('Failed to submit complaint', errorThrown);
-					// Handle error case here
-				}
-			});
-		} catch (error) {
-			console.error('Error:', error);
-			// Handle error case here
-		}
-
-		// Close the modal
 		$('#complaintModal').modal('hide');
+	});
+
+	$(document).on('click',function () {
+		$('#requestButton').on("click",function () {
+			$('#requestModal').modal('show');
+		});
 	});
 })()

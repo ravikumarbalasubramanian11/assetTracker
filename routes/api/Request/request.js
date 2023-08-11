@@ -1,10 +1,9 @@
 const models = require("../../../modals");
-const inventory = require("../../../modals/inventory");
-const { hierarchy } = require("../User/user");
 
 exports.create = async (req, res) => {
 	try {
-		const { requestType, issue, UserId, InventoryId } = req.body;
+		console.log("11");
+		const { requestType, issue, UserId, InventoryId, assetType } = req.body;
 
 		if (![1, 2, 3].includes(Number(requestType))) {
 			return res.status(400).json({ success: false, message: "Invalid requestType" });
@@ -18,7 +17,7 @@ exports.create = async (req, res) => {
 			return res.status(400).json({ success: false, message: "Invalid UserId" });
 		}
 
-		const user = await models.User.findOne({ where: { id: UserId } });
+		const user = await models.User.findOne({ where: { id: res.locals.id } });
 
 		if (!user) {
 			return res.status(400).json({ success: false, message: "Invalid UserId" });
@@ -28,10 +27,9 @@ exports.create = async (req, res) => {
 
 		const createdRequest = await models.Request.create({
 			requestType: requestType,
-			assetType: assetType,
-			presentStatus: presentStatus,
 			issue: issue || "", // Use an empty string if issue is not provided
 			stage: hierarchyId,
+			assetType: assetType,
 			status: 1,
 			UserId: UserId,
 			InventoryId: InventoryId

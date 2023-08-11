@@ -9,12 +9,12 @@ function requireAuth(req, res, next) {
 			return res.status(401).json({ success: false, message: 'Token not provided' });
 		}
 		const decoded = jwt.verify(token, secretKey);
-		console.log(decoded)
 		if (!decoded.username || !decoded.id) {
 			return res.status(401).json({ success: false, message: 'Invalid token data' });
 		}
+		console.log("okokl")
 		res.locals.id = decoded.id;
-		console.log("Id of the user login = ",res.locals.id)
+		console.log("Id of the user login = ",decoded.id)
 		next();
 	} catch (err) {
 		return res.status(401).json({ success: false, message: 'Invalid token', error: err.message });
