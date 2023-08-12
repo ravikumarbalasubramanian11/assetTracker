@@ -173,46 +173,4 @@
 		$('#myTable').hide();
 	}
 
-	if (username !== 'hr') {
-		document.getElementById('raiseRequestBtn').style.display = 'block';
-
-		$('#raiseRequestBtn').on('click', function () {
-			$('#requestModal').modal('show');
-		});
-
-		$('#submitRequestBtn').on('click', function () {
-			function submitRequest() {
-				var requestData = {
-					requestType: $('#requestType').val(),
-					assetType: $('#assetType').val(),
-					presentStatus: $('#presentStatus').val(),
-					requestDetails: $('#requestDetails').val(),
-				};
-
-				$.ajax({
-					url: 'http://localhost:3000/api/request/create',
-					type: 'POST',
-					contentType: 'application/json',
-					data: JSON.stringify(requestData),
-					success: function (response) {
-						console.log('Request submitted successfully:', response);
-						$('#requestModal').modal('hide');
-						resetFormInputs();
-					},
-					error: function (error) {
-						console.error('Error submitting request:', error);
-					},
-				});
-			}
-			submitRequest()
-		});
-
-		function resetFormInputs() {
-			$('#requestType').val('');
-			$('#assetType').val('');
-			$('#presentStatus').val('');
-			$('#requestDetails').val('');
-		}
-	}
-
 })()

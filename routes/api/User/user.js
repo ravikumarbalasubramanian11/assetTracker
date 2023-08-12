@@ -2,14 +2,6 @@ const models = require("../../../modals");
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
 
-exports.user = async (req, res) => {
-	try {
-		return res.json({ success: true, message: "Received" });
-	} catch (err) {
-		return res.send("Err " + err);
-	}
-};
-
 exports.create = async (req, res) => {
 	try {
 		const {

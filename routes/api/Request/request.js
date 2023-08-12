@@ -38,7 +38,6 @@ exports.create = async (req, res) => {
 		}
 		}
 
-
 		const createdRequest = await models.Request.create({
 			requestType: requestType,
 			issue: issue || "", // Use an empty string if issue is not provided
