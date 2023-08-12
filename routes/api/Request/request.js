@@ -2,7 +2,6 @@ const models = require("../../../modals");
 
 exports.create = async (req, res) => {
 	try {
-		console.log("11");
 		const { requestType, issue, UserId, InventoryId, assetType } = req.body;
 
 		if (![1, 2, 3].includes(Number(requestType))) {
@@ -25,13 +24,25 @@ exports.create = async (req, res) => {
 
 		const hierarchyId = user.hierarchyId;
 
+		const existingPendingRequest = await models.Request.findOne({
+			where: {
+				InventoryId: InventoryId,
+				status: 1,
+				requestType: 2
+			}
+		});
+
+		if (existingPendingRequest) {
+			return res.status(400).json({ success: false, message: "Another pending request already exists for this InventoryId." });
+		}
+
 		const createdRequest = await models.Request.create({
 			requestType: requestType,
 			issue: issue || "", // Use an empty string if issue is not provided
 			stage: hierarchyId,
 			assetType: assetType,
 			status: 1,
-			UserId: UserId,
+			UserId: res.locals.id,
 			InventoryId: InventoryId
 		});
 
@@ -126,3 +137,35 @@ exports.approve = async (req, res) => {
 		return res.status(500).json({ success: false, error: `Internal Server Error: ${err}` });
 	}
 };
+
+exports.transaction = async (req, res) => {
+	try {
+		const userId = res.locals.id;
+		const statusValues = [1, 2, 3, 4, 5];
+
+		const statusData = {};
+
+		var statusHeadings = {
+			"status1": "Pending",
+			"status2": "Completed",
+			"status3": "Cancelled",
+			"status4": "Rejected",
+			"status5": "Resolved"
+		};
+
+		for (const status of statusValues) {
+			const response = await models.Request.findAll({
+				where: {
+					UserId: userId,
+					status: status
+				}
+			});
+			statusData[`status${status}`] = response;
+		}
+
+		return res.send({ success: true, statusData: statusData });
+	} catch (err) {
+		console.error("Error:", err);
+		return res.status(500).json({ success: false, error: `Internal Server Error: ${err}` });
+	}
+}
