@@ -60,7 +60,7 @@ exports.inventorySearchId = async (req, res) => {
 	try {
 		const getDetails = await models.Inventory.findAll({
 			attributes: ["id","assetName","assetId","manufacturer","spec","purchaseDate"],
-			where: { UserId: req.params.id }
+			where: { UserId: res.locals.id}
 		});
 
 		return res.json({ success: true, message: getDetails });

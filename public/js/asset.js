@@ -5,7 +5,10 @@
 		ajax: {
 			dataType: 'json',
 			method: 'GET',
-			url: '/api/inventory/inventorySearchId/4',
+			url: '/api/inventory/inventorySearchId',
+			headers: {
+				'x-at-sessiontoken': localStorage.getItem('token')
+			},
 			dataSrc: 'message',
 		},
 		columns: [
@@ -102,7 +105,7 @@
 							var requestTypeId = statusArray[i].requestType;
 							var requestTypeName = requestType[requestTypeId] || "Unknown Request Type";
 
-							statusHtml += '<div class=" row status-bar">' +
+							statusBarsHtml += '<div class=" row status-bar">' +
 								'<div class="col-6"><h5>Request Type</h5></div>' +
 								'<div class="col-6"><h5>Issue</h5></div>' +
 								'<div class="col-6">' + requestTypeName + '</div>' +
@@ -110,8 +113,15 @@
 								'<div class="col-6"><h5>Created Date</h5></div>' +
 								'<div class="col-6"><h5>Last Action</h5></div>' +
 								'<div class="col-6">' + formatDate(statusArray[i].createdAt) + '</div>' +
-								'<div class="status-label col-6">' + formatDate(statusArray[i].updatedAt) + '</div>' +
-								'</div>';
+								'<div class="status-label col-6">' + formatDate(statusArray[i].updatedAt) + '</div>';
+
+							if (status === "status1") {
+								statusBarsHtml += '<div class="col-6">' +
+									'<button class="btn btn-secondary raise-complaint-btn" data-id="' + statusArray[i].id + '">Cancelled</button>' +
+									'</div>';
+							}
+
+							statusBarsHtml += '</div>';
 						}
 
 						statusHtml += statusBarsHtml;
@@ -121,6 +131,11 @@
 				$('#transactionModal .modal-body').html(statusHtml);
 
 				$('#transactionModal').modal('show');
+
+				$('.raise-complaint-btn').on("click", function () {
+					var requestId = $(this).data('id');
+					console.log('Cancelled button clicked for request ID:', requestId);
+				});
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
 				console.log('Failed to get API data', errorThrown);
