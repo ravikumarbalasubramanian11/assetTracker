@@ -1,4 +1,6 @@
 (async () => {
+	var username = localStorage.getItem("username");
+
 	var table = $('#myTable').DataTable({
 		ajax: {
 			dataType: 'json',
@@ -63,7 +65,7 @@
 		});
 	});
 
-	$('#requestButton').on("click", function () {
+	$('#transactionButton').on("click", function () {
 		$.ajax({
 			url: 'http://localhost:3000/api/request/transaction',
 			method: 'GET',
@@ -116,9 +118,9 @@
 					}
 				}
 
-				$('#requestModal .modal-body').html(statusHtml);
+				$('#transactionModal .modal-body').html(statusHtml);
 
-				$('#requestModal').modal('show');
+				$('#transactionModal').modal('show');
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
 				console.log('Failed to get API data', errorThrown);
@@ -138,5 +140,52 @@
 		});
 
 		return formattedDate;
+	}
+
+	if (username !== 'hr') {
+		$('#requestAsset').css('display', 'block');
+
+		$('#requestAsset').on('click', function () {
+			$('#raiseRequestModal').modal('show');
+		});
+
+		$('#submitRequestBtn').on('click', function () {
+			function submitRequest() {
+				var requestData = {
+					requestType: $('#requestType').val(),
+					assetType: $('#assetType').val(),
+					presentStatus: $('#presentStatus').val(),
+					requestDetails: $('#requestDetails').val(),
+				};
+
+				$.ajax({
+					url: 'http://localhost:3000/api/request/create',
+					type: 'POST',
+					contentType: 'application/json',
+					headers: {
+						'x-at-sessiontoken': localStorage.getItem('token')
+					},
+					data: JSON.stringify(requestData),
+					success: function (response) {
+						console.log('Request submitted successfully:', response);
+						alert('Asset request submitted');
+						$('#raiseRequestModal').modal('hide');
+						resetFormInputs();
+					},
+					error: function (jqXHR, textStatus, errorThrown) {
+						console.log('Failed to get API data', errorThrown);
+						console.log('Error response data:', jqXHR.responseJSON);
+					}
+				});
+			}
+			submitRequest();
+		});
+
+		function resetFormInputs() {
+			$('#requestType').val('');
+			$('#assetType').val('');
+			$('#presentStatus').val('');
+			$('#requestDetails').val('');
+		}
 	}
 })()

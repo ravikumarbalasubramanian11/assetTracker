@@ -48,7 +48,8 @@ body
       .col-6
         h3#tableHeading Asset List
       .col-6.d-flex.flex-row.justify-content-end
-        button.btn.btn-secondary#requestButton Transaction
+        button.btn.btn-secondary#transactionButton Transaction
+        button#requestAsset.btn.btn-secondary.mx-2 Request for asset
       .col-12.my-3
         table#myTable
           thead
@@ -76,18 +77,43 @@ body
               button#submitComplaint.btn.btn-primary Submit
               button.btn.btn-secondary(type='button' data-dismiss='modal') Cancel
   // Modal
-  #requestModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='requestModalLabel' aria-hidden='true')
-    .modal-dialog.modal-lg(role='document')
-      .modal-content
-        .modal-header
-          h5#requestModalLabel.modal-title Transactions
-          button.close(type='button' data-dismiss='modal' aria-label='Close')
-            span(aria-hidden='true') ×
-        .modal-body 
-          .row 
-        .modal-footer
-          button.btn.btn-secondary(type='button' data-dismiss='modal') Close
-          button.btn.btn-primary(type='button') Request
+#transactionModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='transactionModalLabel' aria-hidden='true')
+  .modal-dialog.modal-lg(role='document')
+    .modal-content
+      .modal-header
+        h5#transactionModalLabel.modal-title Transactions
+        button.close(type='button' data-dismiss='modal' aria-label='Close')
+          span(aria-hidden='true') ×
+      .modal-body 
+        .row 
+      .modal-footer
+        button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+        button.btn.btn-primary(type='button') Request
+
+#raiseRequestModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='raiseRequestModalLabel' aria-hidden='true')
+  .modal-dialog(role='document')
+    .modal-content
+      .modal-header
+        h5#raiseRequestModalLabel.modal-title Raise a Request
+        button.close(type='button' data-dismiss='modal' aria-label='Close')
+          span(aria-hidden='true') ×
+      .modal-body
+        .form-group
+          label(for='requestType') Request Type
+          select#requestType.form-control(required='')
+            option(value='') Select Request Type
+            option(value='1') Request for Asset
+            option(value='2') Request for Service
+        .form-group
+          label(for='assetType') Asset Type
+          select#assetType.form-control(required='')
+            option(value='') Select Asset Type
+            option(value='1') Laptop
+            option(value='2') PC
+      .modal-footer
+        button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+        button#submitRequestBtn.btn.btn-primary(type='button') Submit Request
+
 
 script(type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js')
 script(src='https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js')

@@ -24,7 +24,8 @@ exports.create = async (req, res) => {
 
 		const hierarchyId = user.hierarchyId;
 
-		const existingPendingRequest = await models.Request.findOne({
+		if(InventoryId){
+					const existingPendingRequest = await models.Request.findOne({
 			where: {
 				InventoryId: InventoryId,
 				status: 1,
@@ -35,6 +36,8 @@ exports.create = async (req, res) => {
 		if (existingPendingRequest) {
 			return res.status(400).json({ success: false, message: "Another pending request already exists for this InventoryId." });
 		}
+		}
+
 
 		const createdRequest = await models.Request.create({
 			requestType: requestType,
@@ -144,14 +147,6 @@ exports.transaction = async (req, res) => {
 		const statusValues = [1, 2, 3, 4, 5];
 
 		const statusData = {};
-
-		var statusHeadings = {
-			"status1": "Pending",
-			"status2": "Completed",
-			"status3": "Cancelled",
-			"status4": "Rejected",
-			"status5": "Resolved"
-		};
 
 		for (const status of statusValues) {
 			const response = await models.Request.findAll({
