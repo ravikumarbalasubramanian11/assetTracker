@@ -24,18 +24,18 @@ exports.create = async (req, res) => {
 
 		const hierarchyId = user.hierarchyId;
 
-		if(InventoryId){
-					const existingPendingRequest = await models.Request.findOne({
-			where: {
-				InventoryId: InventoryId,
-				status: 1,
-				requestType: 2
-			}
-		});
+		if (InventoryId) {
+			const existingPendingRequest = await models.Request.findOne({
+				where: {
+					InventoryId: InventoryId,
+					status: 1,
+					requestType: 2
+				}
+			});
 
-		if (existingPendingRequest) {
-			return res.status(400).json({ success: false, message: "Another pending request already exists for this InventoryId." });
-		}
+			if (existingPendingRequest) {
+				return res.status(400).json({ success: false, message: "Another pending request already exists for this InventoryId." });
+			}
 		}
 
 		const createdRequest = await models.Request.create({
@@ -73,25 +73,47 @@ exports.getRequest = async (req, res) => {
 exports.approve = async (req, res) => {
 	try {
 		const { status } = req.body;
-
 		const id = req.params.id;
 
+		if (!Number.isInteger(Number(status)) || Number(status) <= 0) {
+			return res.status(400).json({ error: "Status must be a positive integer." });
+		}
+
+		const request = await models.Request.findOne({ where: { id } });
+
+		if (!request) {
+			return res.status(404).json({ success: false, message: "Request not found" });
+		}
+
+		if (request.UserId === res.locals.id) {
+			await models.Request.update(
+				{
+					status: 3
+				},
+				{
+					where: {
+						id: id,
+						status: 1
+					}
+				}
+			);
+
+			return res.status(200).json({ success: true, message: "Successfully cancelled the request" })
+		}
+
 		const user = await models.User.findOne({ where: { id: res.locals.id } });
+		const hierarchyId = user.hierarchyId;
 
 		if (!user) {
 			return res.status(400).json({ success: false, message: "Invalid UserId" });
 		}
 
-		const hierarchyId = user.hierarchyId;
-
-		const request = await models.Request.findOne({ where: { id } });
+		if (!hierarchyId) {
+			return res.status(400).json({ success: false, message: "HierarchyId is empty" });
+		}
 
 		if (!(user.id === request.stage)) {
 			return res.status(400).json({ success: false, message: "Invaild to make changes" });
-		}
-
-		if (!request) {
-			return res.status(404).json({ success: false, message: "Request not found" });
 		}
 
 		if (user.username === 'hr') {

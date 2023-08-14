@@ -36,7 +36,6 @@ router.get('/login', (req, res) => {
 });
 
 router.get('/dashboard', (req, res) => {
-	// Only render the dashboard if the user is authenticated
 	res.render('dashboard');
 	console.log(`${req.url}`);
 });

@@ -48,8 +48,9 @@ body
       .col-6
         h3#tableHeading Asset List
       .col-6.d-flex.flex-row.justify-content-end
-        button.btn.btn-secondary#transactionButton Transaction
-        button#requestAsset.btn.btn-secondary.mx-2 Request for asset
+        button.btn.btn-secondary#approvalButton Approval
+        button.btn.btn-secondary#transactionButton.mx-2  Transaction
+        button#requestAsset.btn.btn-secondary Request for asset
       .col-12.my-3
         table#myTable
           thead
@@ -86,6 +87,27 @@ body
           span(aria-hidden='true') ×
       .modal-body 
         .row 
+      .modal-footer
+        button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+        button.btn.btn-primary(type='button') Request
+
+#approvalModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='approvalModalLabel' aria-hidden='true')
+  .modal-dialog.modal-lg(role='document')
+    .modal-content
+      .modal-header
+        h5#transactionModalLabel.modal-title Approval
+        button.close(type='button' data-dismiss='modal' aria-label='Close')
+          span(aria-hidden='true') ×
+      .modal-body 
+        table.table.table-bordered#dataTable
+          thead
+            tr
+              th.col-2 Id
+              th.col-2 Request Type
+              th.col-2 Issue
+              th.col-3 Asset Type
+              th.col-3 Status
+          tbody#dataContainer
       .modal-footer
         button.btn.btn-secondary(type='button' data-dismiss='modal') Close
         button.btn.btn-primary(type='button') Request

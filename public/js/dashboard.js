@@ -41,6 +41,8 @@
 
 	var username = localStorage.getItem("username");
 
+	$("#username").text(username || "Default Username");
+
 	if (username === 'hr') {
 		document.getElementById('tableHeading').style.display = 'block';
 		document.getElementById('myModal').style.display = 'block';

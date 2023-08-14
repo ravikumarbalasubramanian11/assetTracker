@@ -135,7 +135,25 @@
 				$('.raise-complaint-btn').on("click", function () {
 					var requestId = $(this).data('id');
 					console.log('Cancelled button clicked for request ID:', requestId);
+
+					$.ajax({
+						url: 'http://localhost:3000/api/request/approve/' + requestId,
+						method: 'PUT',
+						contentType: 'application/json',
+						data: JSON.stringify({ status: 3 }),
+						headers: {
+							'x-at-sessiontoken': localStorage.getItem('token')
+						},
+						success: function (data) {
+							console.log('Request cancelled successfully:', data);
+						},
+						error: function (jqXHR, textStatus, errorThrown) {
+							console.log('Failed to cancel request', errorThrown);
+							console.log('Error response data:', jqXHR.responseJSON);
+						}
+					});
 				});
+
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
 				console.log('Failed to get API data', errorThrown);
@@ -203,4 +221,57 @@
 			$('#requestDetails').val('');
 		}
 	}
+
+	$('#approvalButton').on("click", function () {
+		$.ajax({
+			url: 'http://localhost:3000/api/request/getRequest',
+			type: 'GET',
+			contentType: 'application/json',
+			headers: {
+				'x-at-sessiontoken': localStorage.getItem('token')
+			},
+			success: function (response) {
+				console.log(response);
+
+				var requestType = {
+					1: "Request for Asset",
+					2: "Request for Service",
+					3: "Return the asset"
+				};
+
+				var status = {
+					1: "Pending",
+					2: "Completed",
+					3: "Cancelled",
+					4: 'Rejected',
+					5: 'Resolved'
+				};
+
+				$('#dataContainer').empty();
+
+				var dataArr = response.data;
+
+				dataArr.forEach(function (data) {
+					var row = '<tr>' +
+						'<td>' + data.id + '</td>' +
+						'<td>' + requestType[data.requestType] + '</td>' +
+						'<td>' + data.issue + '</td>' +
+						'<td>' + (data.assetType || 'N/A') + '</td>' +
+						'<td>' + status[data.status] + '</td>' +
+						'</tr>';
+
+					// Append the row to the table body
+					$('#dataContainer').append(row);
+				});
+
+				// Show the modal
+				$('#approvalModal').modal('show');
+			},
+			error: function (jqXHR, textStatus, errorThrown) {
+				console.log('Failed to get API data', errorThrown);
+				console.log('Error response data:', jqXHR.responseJSON);
+			}
+		});
+	});
+
 })()
