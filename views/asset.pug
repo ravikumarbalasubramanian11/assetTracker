@@ -99,15 +99,27 @@ body
         button.close(type='button' data-dismiss='modal' aria-label='Close')
           span(aria-hidden='true') ×
       .modal-body 
-        table.table.table-bordered#dataTable
+        h2 Pending
+        table#pendingTable.table.table-bordered
+            thead
+              tr
+                th.col-2 Id
+                th.col-2 RequestType
+                th.col-2 Issue
+                th.col-3 Asset Type
+                th.col-3 Status
+                th.col-2 Action
+            tbody#pendingTableBody
+        h2 Cancelled
+        table#completedTable.table.table-bordered
           thead
             tr
               th.col-2 Id
-              th.col-2 Request Type
+              th.col-2 RequestType
               th.col-2 Issue
               th.col-3 Asset Type
               th.col-3 Status
-          tbody#dataContainer
+          tbody#completedTableBody
       .modal-footer
         button.btn.btn-secondary(type='button' data-dismiss='modal') Close
         button.btn.btn-primary(type='button') Request

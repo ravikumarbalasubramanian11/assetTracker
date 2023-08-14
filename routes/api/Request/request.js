@@ -123,7 +123,7 @@ exports.approve = async (req, res) => {
 			}
 			const updatedRequest = await models.Request.update(
 				{
-					status: 2,
+					status: status,
 					stage: hierarchyId
 				},
 				{

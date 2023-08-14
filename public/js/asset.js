@@ -247,7 +247,9 @@
 					5: 'Resolved'
 				};
 
-				$('#dataContainer').empty();
+				$('#pendingTableBody').empty();
+				$('#completedTableBody').empty();
+				// Clear other table bodies
 
 				var dataArr = response.data;
 
@@ -257,14 +259,32 @@
 						'<td>' + requestType[data.requestType] + '</td>' +
 						'<td>' + data.issue + '</td>' +
 						'<td>' + (data.assetType || 'N/A') + '</td>' +
-						'<td>' + status[data.status] + '</td>' +
-						'</tr>';
+						'<td>' + status[data.status] + '</td>';
 
-					// Append the row to the table body
-					$('#dataContainer').append(row);
+					if (data.status === 1) {
+						row += '<td><button class="btn btn-secondary approve-button" data-id="' + data.id + '">Approve</button></td>' +
+							'<td><button class="btn btn-danger reject-button" data-id="' + data.id + '">Reject</button></td>';
+					}
+
+					row += '</tr>';
+
+					if (data.status === 1) {
+						$('#pendingTableBody').append(row);
+					} else if (data.status === 3) {
+						$('#completedTableBody').append(row);
+					}
 				});
 
-				// Show the modal
+				$('.approve-button').on('click', function () {
+					var id = $(this).data('id');
+					updateStatus(id, 2);
+				});
+
+				$('.reject-button').on('click', function () {
+					var id = $(this).data('id');
+					updateStatus(id, 3);
+				});
+
 				$('#approvalModal').modal('show');
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
@@ -274,4 +294,22 @@
 		});
 	});
 
+	function updateStatus(id, newStatus) {
+		$.ajax({
+			url: `http://localhost:3000/api/request/approve/${id}`,
+			type: 'PUT',
+			contentType: 'application/json',
+			headers: {
+				'x-at-sessiontoken': localStorage.getItem('token')
+			},
+			data: JSON.stringify({ status: newStatus }),
+			success: function (response) {
+				console.log('Status updated successfully:', response);
+			},
+			error: function (jqXHR, textStatus, errorThrown) {
+				console.log('Failed to update status', errorThrown);
+				console.log('Error response data:', jqXHR.responseJSON);
+			}
+		});
+	}
 })()
