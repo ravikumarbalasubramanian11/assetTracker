@@ -85,6 +85,11 @@ body
                 option(value='Active') Active
                 option(value='Inactive') Inactive
                 option(value='UnderService') UnderService
+            .form-group
+              label(for='assignedTo') Assigned to
+              select#assignedTo.form-control(name='assignedTo')
+                option(value='' disabled='' selected='') Select an option
+
         .modal-footer
           button.btn.btn-secondary(type='button' data-dismiss='modal') Close
           button#saveEdit.btn.btn-primary(type='button') Save Changes

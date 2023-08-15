@@ -1,4 +1,35 @@
 (async () => {
+	var username = localStorage.getItem("username");
+	var usersDataMap = {};
+
+	$.ajax({
+		url: "http://localhost:3000/api/list",
+		method: "GET",
+		dataType: "json",
+		headers: {
+			'x-at-sessiontoken': localStorage.getItem('token')
+		},
+		success: function (data) {
+			console.log(data);
+
+			if (data.data) {
+				const selectElement = $("#assignedTo");
+				data.data.forEach(function (user) {
+					usersDataMap[user.id] = user.username;
+				});
+				selectElement.empty();
+
+				data.data.forEach(function (user) {
+					selectElement.append(new Option(user.username, user.id));
+				});
+			} else {
+				console.error("API Error:", data.message);
+			}
+		},
+		error: function (xhr, status, error) {
+			console.error("API Request Failed:", error);
+		}
+	});
 
 	$("#myModal").on('click', function () {
 		$("#exampleModal").modal("show");
@@ -39,8 +70,6 @@
 		});
 	});
 
-	var username = localStorage.getItem("username");
-
 	$("#username").text(username || "Default Username");
 
 	if (username === 'hr') {
@@ -65,11 +94,7 @@
 				{
 					data: 'UserId',
 					render: function (data, type, row) {
-						if (data === null) {
-							return 'N/A';
-						} else {
-							return data;
-						}
+						return usersDataMap[data] || data;
 					}
 				},
 				{ data: 'status' },
@@ -96,7 +121,7 @@
 			$('#editModal #vendorDetails').val(rowData.vendorDetails);
 			$('#editModal #specification').val(rowData.spec);
 			$('#editModal #status').val(rowData.status);
-
+			$("#editModal #assignedTo").val(rowData.UserId);
 			editedRowData = rowData;
 			$('#editModal').modal('show');
 		});
@@ -109,7 +134,7 @@
 			var updatedVendorDetails = $('#editModal #vendorDetails').val();
 			var updatedSpecification = $('#editModal #specification').val();
 			var updatedStatus = $('#editModal #status').val();
-			console.log(updatedStatus);
+			var updatedAssignee = $("#editModal #assignedTo").val();
 
 			if (!editedRowData) {
 				alert('Error: No row data found.');
@@ -127,6 +152,7 @@
 					vendorDetails: updatedVendorDetails,
 					spec: updatedSpecification,
 					status: updatedStatus,
+					UserId: updatedAssignee,
 				},
 				success: function (response) {
 					console.log(response);
@@ -169,10 +195,12 @@
 				});
 			}
 		});
-
 	}
 	else {
 		$('#myTable').hide();
 	}
 
+	setTimeout(() => {
+		table.ajax.reload();
+	}, 2000);
 })()

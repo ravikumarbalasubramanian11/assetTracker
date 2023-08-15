@@ -93,7 +93,7 @@ exports.edit = async (req, res) => {
 			return res.status(400).json({ success: false, message: 'Invalid ID. ID must be a positive non-zero integer.' });
 		}
 
-		const { assetName, assetId, manufacturer, vendorDetails, purchaseDate, spec, status } = req.body;
+		const { assetName, assetId, manufacturer, vendorDetails, purchaseDate, spec, status, UserId } = req.body;
 
 		const assetEdit = await models.Inventory.update({
 			assetName: assetName,
@@ -102,7 +102,8 @@ exports.edit = async (req, res) => {
 			purchaseDate: purchaseDate,
 			vendorDetails: vendorDetails,
 			spec: spec,
-			status: status
+			status: status,
+			UserId: UserId
 		}, {
 			where: {
 				id: id

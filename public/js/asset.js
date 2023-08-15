@@ -243,88 +243,154 @@
 		}
 	}
 
-	function reloadTables() {
-		$.ajax({
-			url: 'http://localhost:3000/api/request/getRequest',
-			type: 'GET',
-			contentType: 'application/json',
-			headers: {
-				'x-at-sessiontoken': localStorage.getItem('token')
-			},
-			success: function (response) {
-				console.log(response);
+	// function reloadTables() {
+	// 	$.ajax({
+	// 		url: 'http://localhost:3000/api/request/getRequest',
+	// 		type: 'GET',
+	// 		contentType: 'application/json',
+	// 		headers: {
+	// 			'x-at-sessiontoken': localStorage.getItem('token')
+	// 		},
+	// 		success: function (response) {
+	// 			console.log(response);
 
-				var requestType = {
-					1: "Request for Asset",
-					2: "Request for Service",
-					3: "Return the asset"
-				};
+	// 			var requestType = {
+	// 				1: "Request for Asset",
+	// 				2: "Request for Service",
+	// 				3: "Return the asset"
+	// 			};
 
-				var status = {
-					1: "Pending",
-					2: "Completed",
-					3: "Cancelled",
-					4: 'Rejected',
-					5: 'Resolved'
-				};
+	// 			var status = {
+	// 				1: "Pending",
+	// 				2: "Completed",
+	// 				3: "Cancelled",
+	// 				4: 'Rejected',
+	// 				5: 'Resolved'
+	// 			};
 
-				$('#pendingTableBody').empty();
-				$('#completedTableBody').empty();
+	// 			$('#pendingTableBody').empty();
+	// 			$('#completedTableBody').empty();
 
-				var dataArr = response.data;
+	// 			var dataArr = response.data;
 
-				dataArr.forEach(function (data) {
-					var row = '<tr>' +
-						'<td>' + data.id + '</td>' +
-						'<td>' + requestType[data.requestType] + '</td>' +
-						'<td>' + data.issue + '</td>' +
-						'<td>' + (data.assetType || 'N/A') + '</td>' +
-						'<td>' + status[data.status] + '</td>';
+	// 			dataArr.forEach(function (data) {
+	// 				var row = '<tr>' +
+	// 					'<td>' + data.id + '</td>' +
+	// 					'<td>' + requestType[data.requestType] + '</td>' +
+	// 					'<td>' + data.issue + '</td>' +
+	// 					'<td>' + (data.assetType || 'N/A') + '</td>' +
+	// 					'<td>' + status[data.status] + '</td>';
 
-					if (data.status === 1) {
-						row += '<td><button class="btn btn-secondary approve-button" data-id="' + data.id + '">Approve</button></td>' +
-							'<td><button class="btn btn-danger reject-button" data-id="' + data.id + '">Reject</button></td>';
-					}
+	// 				if (data.status === 1) {
+	// 					row += '<td><button class="btn btn-secondary approve-button" data-id="' + data.id + '">Approve</button></td>' +
+	// 						'<td><button class="btn btn-danger reject-button" data-id="' + data.id + '">Reject</button></td>';
+	// 				}
 
-					row += '</tr>';
+	// 				row += '</tr>';
 
-					if (data.status === 1) {
-						$('#pendingTableBody').append(row);
-					} else if (data.status === 3) {
-						$('#completedTableBody').append(row);
-					}
-				});
+	// 				if (data.status === 1) {
+	// 					$('#pendingTableBody').append(row);
+	// 				} else if (data.status === 3) {
+	// 					$('#completedTableBody').append(row);
+	// 				}
+	// 			});
 
-				$('.approve-button').on('click', function () {
-					var id = $(this).data('id');
-					var confirmation = confirm("Are you sure you want to approve this request?");
+	// 			$('.approve-button').on('click', function () {
+	// 				var id = $(this).data('id');
+	// 				var confirmation = confirm("Are you sure you want to approve this request?");
 
-					if (confirmation) {
-						updateStatus(id, 2);
-					}
-				});
+	// 				if (confirmation) {
+	// 					updateStatus(id, 2);
+	// 				}
+	// 			});
 
-				$('.reject-button').on('click', function () {
-					var id = $(this).data('id');
-					var confirmation = confirm("Are you sure you want to reject this request?");
+	// 			$('.reject-button').on('click', function () {
+	// 				var id = $(this).data('id');
+	// 				var confirmation = confirm("Are you sure you want to reject this request?");
 
-					if (confirmation) {
-						updateStatus(id, 3);
-					}
-				});
+	// 				if (confirmation) {
+	// 					updateStatus(id, 3);
+	// 				}
+	// 			});
 
-				$('#approvalModal').modal('show');
-			},
-			error: function (jqXHR, textStatus, errorThrown) {
-				console.log('Failed to get API data', errorThrown);
-				console.log('Error response data:', jqXHR.responseJSON);
-			}
-		});
-	}
+	// 			$('#approvalModal').modal('show');
+	// 		},
+	// 		error: function (jqXHR, textStatus, errorThrown) {
+	// 			console.log('Failed to get API data', errorThrown);
+	// 			console.log('Error response data:', jqXHR.responseJSON);
+	// 		}
+	// 	});
+	// }
 
+	var approvalModal;
 	$('#approvalButton').on("click", function () {
-		reloadTables()
+		$('#approvalModal').modal('show');
+
+		if (!approvalModal) {
+			approvalModal = $('#ApprovalTable').DataTable({
+				ajax: {
+					dataType: 'json',
+					method: 'GET',
+					url: '/api/request/getRequest',
+					headers: {
+						'x-at-sessiontoken': localStorage.getItem('token')
+					},
+					dataSrc: 'data',
+				},
+				columns: [
+					{ data: 'id' },
+					{
+						data: "createdAt",
+						render: function (data, type, row) {
+							return formatDate(data);
+						}
+					},
+					{
+						data: 'requestType',
+						render: function (data, type, row) {
+							return request[row.requestType];
+						}
+					},
+					{ data: 'issue' },
+					{
+						data: 'assetType',
+						render: function (data, type, row) {
+							return data ? asset[data] : 'N/A';
+						}
+					},
+					{
+						data: 'status',
+						render: function (data, type, row) {
+							return status[row.status];
+						}
+					},
+					{
+						data: "updatedAt",
+						render: function (data, type, row) {
+							return formatDate(data);
+						}
+					},
+					{
+						data: null,
+						render: function (data, type, row) {
+							if (row.status === 1) {
+								return '<button class="btn btn-success cancelled-complaint-btn" data-id="' + row.id + '">Cancel</button>';
+							} else {
+								return '';
+							}
+						}
+					}
+				], order: [[4, 'asc']],
+				success: function (response) {
+					console.log("API Response Data:", response.message);
+				},
+				error: function (xhr, status, error) {
+					console.error("API Request Error:", error);
+				}
+			});
+		}
 	});
+
 
 	function updateStatus(id, newStatus) {
 		$.ajax({
