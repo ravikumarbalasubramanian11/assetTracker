@@ -185,3 +185,32 @@ exports.transaction = async (req, res) => {
 		return res.status(500).json({ success: false, error: `Internal Server Error: ${err}` });
 	}
 }
+
+exports.requestByStatus = async (req, res) => {
+	try {
+		const status = parseInt(req.params.status);
+
+		if (status < 0 || status > 5) {
+			return res.status(400).json({ success: false, error: "Invalid status value. Status must be between 0 and 5." });
+		}
+
+		let whereClause = {
+			UserId: res.locals.id
+		};
+
+		if (status === 0) {
+			whereClause.status = { [models.Sequelize.Op.between]: [1, 5] };
+		} else {
+			whereClause.status = status;
+		}
+
+		const response = await models.Request.findAll({
+			where: whereClause
+		});
+
+		return res.status(200).json({ success: true, message: response });
+	} catch (err) {
+		console.error("Error:", err);
+		return res.status(500).json({ success: false, error: `Internal Server Error: ${err}` });
+	}
+};
