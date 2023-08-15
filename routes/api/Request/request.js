@@ -121,10 +121,15 @@ exports.approve = async (req, res) => {
 			if (request.status !== 1) {
 				return res.status(400).json({ success: false, message: "Invalid status change for HR user" });
 			}
+
+			if (![2, 4].includes(Number(status))) {
+				return res.status(400).json({ success: false, message: "Invalid status change. Status must be 2 or 4." });
+			}
+
 			const updatedRequest = await models.Request.update(
 				{
 					status: status,
-					stage: hierarchyId
+					stage: res.locals.id
 				},
 				{
 					where: {
@@ -137,7 +142,8 @@ exports.approve = async (req, res) => {
 			return res.status(200).json({ success: true, message: "Request approved by HR", data: updatedRequest });
 		} else {
 			// Non-HR users can change status to 3 or 4, but only if the status is 1
-			if (![3, 4].includes(Number(status))) {
+			// 1: Pending, 2: Completed, 3: Cancelled, 4: Rejected  5:Resolved
+			if (![1, 3, 4].includes(Number(status))) {
 				return res.status(400).json({ success: false, message: "Invalid status change" });
 			}
 

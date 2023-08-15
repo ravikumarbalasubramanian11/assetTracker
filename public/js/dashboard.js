@@ -1,6 +1,7 @@
 (async () => {
 	var username = localStorage.getItem("username");
 	var usersDataMap = {};
+	var editedRowData;
 
 	$.ajax({
 		url: "http://localhost:3000/api/list",
@@ -73,6 +74,10 @@
 	$("#username").text(username || "Default Username");
 
 	if (username === 'hr') {
+		setTimeout(() => {
+			table.ajax.reload();
+		}, 2000);
+
 		document.getElementById('tableHeading').style.display = 'block';
 		document.getElementById('myModal').style.display = 'block';
 
@@ -108,8 +113,6 @@
 				}
 			],
 		});
-
-		var editedRowData;
 
 		$('#myTable').on('click', '.btn-edit', function () {
 			var rowData = table.row($(this).parents('tr')).data();
@@ -199,8 +202,4 @@
 	else {
 		$('#myTable').hide();
 	}
-
-	setTimeout(() => {
-		table.ajax.reload();
-	}, 2000);
 })()
