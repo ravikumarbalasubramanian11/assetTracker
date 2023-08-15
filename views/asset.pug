@@ -99,8 +99,10 @@ body
         button.close(type='button' data-dismiss='modal' aria-label='Close')
           span(aria-hidden='true') ×
       .modal-body 
-        h2 Pending
-        table#pendingTable.table.table-bordered
+        h2 Pending 
+        p#noDataParagraph.text-muted(style='display: none;') No data found.
+        div#pendingTable
+          table#pendingTable.table.table-bordered
             thead
               tr
                 th.col-2 Id
@@ -120,6 +122,16 @@ body
               th.col-3 Asset Type
               th.col-3 Status
           tbody#completedTableBody
+        h2 Rejected
+        table#rejectedTable.table.table-bordered
+          thead
+            tr
+              th.col-2 Id
+              th.col-2 RequestType
+              th.col-2 Issue
+              th.col-3 Asset Type
+              th.col-3 Status
+          tbody#rejectedTableBody
       .modal-footer
         button.btn.btn-secondary(type='button' data-dismiss='modal') Close
         button.btn.btn-primary(type='button') Request

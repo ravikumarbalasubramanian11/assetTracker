@@ -68,99 +68,218 @@
 		});
 	});
 
+	// $('#transactionButton').on("click", function () {
+	// 	$.ajax({
+	// 		url: 'http://localhost:3000/api/request/transaction',
+	// 		method: 'GET',
+	// 		headers: {
+	// 			'x-at-sessiontoken': localStorage.getItem('token')
+	// 		},
+	// 		success: function (data) {
+	// 			console.log(data);
+
+	// 			var statusHeadings = {
+	// 				"status1": "Pending",
+	// 				"status2": "Completed",
+	// 				"status3": "Cancelled",
+	// 				"status4": "Rejected",
+	// 				"status5": "Resolved"
+	// 			};
+
+	// 			var requestType = {
+	// 				1: "Request for Asset",
+	// 				2: "Request for Service",
+	// 				3: "Return the asset"
+	// 			};
+
+	// 			var statusHtml = '';
+	// 			for (var status in data.statusData) {
+	// 				var statusArray = data.statusData[status];
+
+	// 				if (statusArray.length > 0) {
+	// 					var heading = statusHeadings[status] || "Unknown";
+	// 					statusHtml += '<h4>' + heading + '</h4>';
+
+	// 					var statusBarsHtml = '';
+	// 					for (var i = 0; i < statusArray.length; i++) {
+	// 						var requestTypeId = statusArray[i].requestType;
+	// 						var requestTypeName = requestType[requestTypeId] || "Unknown Request Type";
+
+	// 						statusBarsHtml += '<div class=" row status-bar">' +
+	// 							'<div class="col-6"><h5>Request Type</h5></div>' +
+	// 							'<div class="col-6"><h5>Issue</h5></div>' +
+	// 							'<div class="col-6">' + requestTypeName + '</div>' +
+	// 							'<div class="status-label col-6">' + statusArray[i].issue + '</div>' +
+	// 							'<div class="col-6"><h5>Created Date</h5></div>' +
+	// 							'<div class="col-6"><h5>Last Action</h5></div>' +
+	// 							'<div class="col-6">' + formatDate(statusArray[i].createdAt) + '</div>' +
+	// 							'<div class="status-label col-6">' + formatDate(statusArray[i].updatedAt) + '</div>';
+
+	// 						if (status === "status1") {
+	// 							statusBarsHtml += '<div class="col-6">' +
+	// 								'<button class="btn btn-secondary raise-complaint-btn" data-id="' + statusArray[i].id + '">Cancelled</button>' +
+	// 								'</div>';
+	// 						}
+
+	// 						statusBarsHtml += '</div>';
+	// 					}
+
+	// 					statusHtml += statusBarsHtml;
+	// 				}
+	// 			}
+
+	// 			$('#transactionModal .modal-body').html(statusHtml);
+	// 			$('#transactionModal').modal('show');
+	// 			$('.raise-complaint-btn').on("click", function () {
+	// 				var requestId = $(this).data('id');
+
+	// 				var confirmed = confirm("Are you sure you want to cancel this request?");
+
+	// 				if (!confirmed) {
+	// 					return;
+	// 				}
+
+	// 				console.log('Cancelled button clicked for request ID:', requestId);
+
+	// 				$.ajax({
+	// 					url: 'http://localhost:3000/api/request/approve/' + requestId,
+	// 					method: 'PUT',
+	// 					contentType: 'application/json',
+	// 					data: JSON.stringify({ status: 3 }),
+	// 					headers: {
+	// 						'x-at-sessiontoken': localStorage.getItem('token')
+	// 					},
+	// 					success: function (data) {
+	// 						console.log('Request cancelled successfully:', data);
+	// 						alert("Request cancelled successfully");
+	// 					},
+	// 					error: function (jqXHR, textStatus, errorThrown) {
+	// 						console.log('Failed to cancel request', errorThrown);
+	// 						console.log('Error response data:', jqXHR.responseJSON);
+	// 					}
+	// 				});
+	// 			});
+
+	// 		},
+	// 		error: function (jqXHR, textStatus, errorThrown) {
+	// 			console.log('Failed to get API data', errorThrown);
+	// 			console.log('Error response data:', jqXHR.responseJSON);
+	// 		}
+	// 	});
+	// });
+
+
 	$('#transactionButton').on("click", function () {
-		$.ajax({
-			url: 'http://localhost:3000/api/request/transaction',
-			method: 'GET',
-			headers: {
-				'x-at-sessiontoken': localStorage.getItem('token')
-			},
-			success: function (data) {
-				console.log(data);
+		transactionModal().then(function (data) {
 
-				var statusHeadings = {
-					"status1": "Pending",
-					"status2": "Completed",
-					"status3": "Cancelled",
-					"status4": "Rejected",
-					"status5": "Resolved"
-				};
+			var statusHeadings = {
+				"status1": "Pending",
+				"status2": "Completed",
+				"status3": "Cancelled",
+				"status4": "Rejected",
+				"status5": "Resolved"
+			};
 
-				var requestType = {
-					1: "Request for Asset",
-					2: "Request for Service",
-					3: "Return the asset"
-				};
+			var requestType = {
+				1: "Request for Asset",
+				2: "Request for Service",
+				3: "Return the asset"
+			};
 
-				var statusHtml = '';
-				for (var status in data.statusData) {
-					var statusArray = data.statusData[status];
+			var statusHtml = '';
+			for (var status in data.statusData) {
+				var statusArray = data.statusData[status];
 
-					if (statusArray.length > 0) {
-						var heading = statusHeadings[status] || "Unknown";
-						statusHtml += '<h4>' + heading + '</h4>';
+				if (statusArray.length > 0) {
+					var heading = statusHeadings[status] || "Unknown";
+					statusHtml += '<h4>' + heading + '</h4>';
 
-						var statusBarsHtml = '';
-						for (var i = 0; i < statusArray.length; i++) {
-							var requestTypeId = statusArray[i].requestType;
-							var requestTypeName = requestType[requestTypeId] || "Unknown Request Type";
+					var statusBarsHtml = '';
+					for (var i = 0; i < statusArray.length; i++) {
+						var requestTypeId = statusArray[i].requestType;
+						var requestTypeName = requestType[requestTypeId] || "Unknown Request Type";
 
-							statusBarsHtml += '<div class=" row status-bar">' +
-								'<div class="col-6"><h5>Request Type</h5></div>' +
-								'<div class="col-6"><h5>Issue</h5></div>' +
-								'<div class="col-6">' + requestTypeName + '</div>' +
-								'<div class="status-label col-6">' + statusArray[i].issue + '</div>' +
-								'<div class="col-6"><h5>Created Date</h5></div>' +
-								'<div class="col-6"><h5>Last Action</h5></div>' +
-								'<div class="col-6">' + formatDate(statusArray[i].createdAt) + '</div>' +
-								'<div class="status-label col-6">' + formatDate(statusArray[i].updatedAt) + '</div>';
+						statusBarsHtml += '<div class=" row status-bar">' +
+							'<div class="col-6"><h5>Request Type</h5></div>' +
+							'<div class="col-6"><h5>Issue</h5></div>' +
+							'<div class="col-6">' + requestTypeName + '</div>' +
+							'<div class="status-label col-6">' + statusArray[i].issue + '</div>' +
+							'<div class="col-6"><h5>Created Date</h5></div>' +
+							'<div class="col-6"><h5>Last Action</h5></div>' +
+							'<div class="col-6">' + formatDate(statusArray[i].createdAt) + '</div>' +
+							'<div class="status-label col-6">' + formatDate(statusArray[i].updatedAt) + '</div>';
 
-							if (status === "status1") {
-								statusBarsHtml += '<div class="col-6">' +
-									'<button class="btn btn-secondary raise-complaint-btn" data-id="' + statusArray[i].id + '">Cancelled</button>' +
-									'</div>';
-							}
-
-							statusBarsHtml += '</div>';
+						if (status === "status1") {
+							statusBarsHtml += '<div class="col-6">' +
+								'<button class="btn btn-secondary cancelled-complaint-btn" data-id="' + statusArray[i].id + '">Cancelled</button>' +
+								'</div>';
 						}
 
-						statusHtml += statusBarsHtml;
+						statusBarsHtml += '</div>';
 					}
+
+					statusHtml += statusBarsHtml;
+				}
+			}
+
+			$('#transactionModal .modal-body').html(statusHtml);
+			$('#transactionModal').modal('show');
+			$('.cancelled-complaint-btn').on("click", function () {
+				var requestId = $(this).data('id');
+
+				var confirmed = confirm("Are you sure you want to cancel this request?");
+
+				if (!confirmed) {
+					return;
 				}
 
-				$('#transactionModal .modal-body').html(statusHtml);
+				console.log('Cancelled button clicked for request ID:', requestId);
 
-				$('#transactionModal').modal('show');
-
-				$('.raise-complaint-btn').on("click", function () {
-					var requestId = $(this).data('id');
-					console.log('Cancelled button clicked for request ID:', requestId);
-
-					$.ajax({
-						url: 'http://localhost:3000/api/request/approve/' + requestId,
-						method: 'PUT',
-						contentType: 'application/json',
-						data: JSON.stringify({ status: 3 }),
-						headers: {
-							'x-at-sessiontoken': localStorage.getItem('token')
-						},
-						success: function (data) {
-							console.log('Request cancelled successfully:', data);
-						},
-						error: function (jqXHR, textStatus, errorThrown) {
-							console.log('Failed to cancel request', errorThrown);
-							console.log('Error response data:', jqXHR.responseJSON);
-						}
-					});
+				$.ajax({
+					url: 'http://localhost:3000/api/request/approve/' + requestId,
+					method: 'PUT',
+					contentType: 'application/json',
+					data: JSON.stringify({ status: 3 }),
+					headers: {
+						'x-at-sessiontoken': localStorage.getItem('token')
+					},
+					success: function (data) {
+						console.log('Request cancelled successfully:', data);
+						alert("Request cancelled successfully");
+						transactionModal();
+					},
+					error: function (jqXHR, textStatus, errorThrown) {
+						console.log('Failed to cancel request', errorThrown);
+						console.log('Error response data:', jqXHR.responseJSON);
+					}
 				});
-
-			},
-			error: function (jqXHR, textStatus, errorThrown) {
-				console.log('Failed to get API data', errorThrown);
-				console.log('Error response data:', jqXHR.responseJSON);
-			}
+			});
+		}).catch(function (error) {
+			console.log('Error:', error);
 		});
+
 	});
+
+	function transactionModal() {
+		return new Promise(function (resolve, reject) {
+			$.ajax({
+				url: 'http://localhost:3000/api/request/transaction',
+				method: 'GET',
+				headers: {
+					'x-at-sessiontoken': localStorage.getItem('token')
+				},
+				success: function (data) {
+					console.log(data);
+					resolve(data); // Resolve the promise with the data
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+					console.log('Failed to get API data', errorThrown);
+					console.log('Error response data:', jqXHR.responseJSON);
+					reject(errorThrown); // Reject the promise with the error
+				}
+			});
+		});
+	}
 
 	function formatDate(dateTime) {
 		var date = new Date(dateTime);
@@ -222,7 +341,7 @@
 		}
 	}
 
-	$('#approvalButton').on("click", function () {
+	function reloadTables() {
 		$.ajax({
 			url: 'http://localhost:3000/api/request/getRequest',
 			type: 'GET',
@@ -249,7 +368,6 @@
 
 				$('#pendingTableBody').empty();
 				$('#completedTableBody').empty();
-				// Clear other table bodies
 
 				var dataArr = response.data;
 
@@ -277,12 +395,20 @@
 
 				$('.approve-button').on('click', function () {
 					var id = $(this).data('id');
-					updateStatus(id, 2);
+					var confirmation = confirm("Are you sure you want to approve this request?");
+
+					if (confirmation) {
+						updateStatus(id, 2);
+					}
 				});
 
 				$('.reject-button').on('click', function () {
 					var id = $(this).data('id');
-					updateStatus(id, 3);
+					var confirmation = confirm("Are you sure you want to reject this request?");
+
+					if (confirmation) {
+						updateStatus(id, 3);
+					}
 				});
 
 				$('#approvalModal').modal('show');
@@ -292,6 +418,10 @@
 				console.log('Error response data:', jqXHR.responseJSON);
 			}
 		});
+	}
+
+	$('#approvalButton').on("click", function () {
+		reloadTables()
 	});
 
 	function updateStatus(id, newStatus) {
@@ -305,6 +435,7 @@
 			data: JSON.stringify({ status: newStatus }),
 			success: function (response) {
 				console.log('Status updated successfully:', response);
+				reloadTables();
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
 				console.log('Failed to update status', errorThrown);
