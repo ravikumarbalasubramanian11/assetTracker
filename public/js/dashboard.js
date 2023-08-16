@@ -6,6 +6,15 @@
 	var usersDataMap = {};
 	var editedRowData;
 
+	var assetTypes = {
+		1: "Laptop",
+		2: "PC",
+		3: "Mobile",
+		4: "Charger",
+		5: 'Keyboard',
+		6: 'Mouse'
+	};
+
 	$.ajax({
 		url: "http://localhost:3000/api/list",
 		method: "GET",
@@ -100,6 +109,12 @@
 				},
 				{
 					data: 'assetId'
+				},
+				{
+					data: "assetType",
+					render: function (data, row, type) {
+						return data ? assetTypes[data] : "---";
+					}
 				},
 				{
 					data: 'manufacturer'

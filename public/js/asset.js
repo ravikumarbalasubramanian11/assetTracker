@@ -384,13 +384,18 @@
 				method: 'GET',
 				dataType: 'json',
 				success: function (data) {
+					console.log("API Response Data:", data); // Check the entire response
 					const selectElement = $("#assetSelect");
 					selectElement.empty();
 
-					selectElement.append(new Option('Select an asset to assign', ''));
-					data.message.forEach(function (asset) {
-						selectElement.append(new Option(asset.assetName, asset.id));
-					});
+					if (data.message && data.message.length > 0) {
+						selectElement.append(new Option('Select an asset to assign', ''));
+						data.message.forEach(function (asset) {
+							selectElement.append(new Option(asset.assetName, asset.id));
+						});
+					} else {
+						console.log("No assets available.");
+					}
 				},
 				error: function (xhr, status, error) {
 					console.error('API Request Failed:', error);

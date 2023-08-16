@@ -31,6 +31,7 @@ body
 							th Id
 							th Asset Name
 							th Asset Id
+							th Asset Type
 							th Manufacturer
 							th Vendor Details
 							th Purchase Date
@@ -115,13 +116,13 @@ body
 					form
 						.form-group
 							label(for="assetId") Asset ID
-							input#assetId1.form-control(type="text" name="assetId" required)
+							input#assetId1.form-control(type="text" name="assetId" autocomplete="off" required)
 						.form-group
 							label(for="assetName") Asset name
-							input#assetName1.form-control(type='text' name='assetName' required='')
+							input#assetName1.form-control(type='text' name='assetName' autocomplete="off" required='')
 						.form-group
 							label(for='assetType') Asset Type
-							select#assetType1.form-control(required='')
+							select#assetType1.form-control(required='' autocomplete="off")
 								option(value='') Select Asset Type
 								option(value='1') Laptop
 								option(value='2') PC
@@ -131,16 +132,16 @@ body
 								option(value="6") Mouse
 						.form-group
 							label(for="manufacturer") Manufacture
-							input#manufacturer1.form-control(type="text" name="manufacturer" required)
+							input#manufacturer1.form-control(type="text" name="manufacturer" autocomplete="off" required)
 						.form-group
 							label(for="purchaseDate") Purchase Date
-							input#purchaseDate1.form-control(type="date" name="purchaseDate" required)
+							input#purchaseDate1.form-control(type="date" name="purchaseDate" autocomplete="off" required)
 						.form-group
 							label(for="vendorDetails") Vendor Details
-							input#vendorDetails1.form-control(type="text" name="vendorDetails" required)
+							input#vendorDetails1.form-control(type="text" name="vendorDetails" autocomplete="off" required)
 						.form-group
 							label(for="specification") Specification
-							textarea#specification1.form-control(name="specification" rows="4" required)
+							textarea#specification1.form-control(name="specification" rows="4" autocomplete="off" required)
 				.modal-footer
 					button.btn.btn-secondary(type="button" data-dismiss="modal") Close
 					button#saveDevice.btn.btn-primary(type="button") Save Device
