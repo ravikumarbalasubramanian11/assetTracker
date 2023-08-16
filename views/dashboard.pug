@@ -115,11 +115,20 @@ body
 				.modal-body
 					form
 						.form-group
-							label(for="assetId") Asset ID
+							label(for="assetId") Serial No
 							input#assetId1.form-control(type="text" name="assetId" autocomplete="off" required)
 						.form-group
 							label(for="assetName") Asset name
 							input#assetName1.form-control(type='text' name='assetName' autocomplete="off" required='')
+						.form-group
+							label(for="manufacturer") Manufacture
+							input#manufacturer1.form-control(type="text" name="manufacturer" autocomplete="off" required)
+						.form-group
+							label(for="purchaseDate") Purchase Date
+							input#purchaseDate1.form-control(type="date" name="purchaseDate" autocomplete="off" required)
+						.form-group
+							label(for="vendorDetails") Vendor Details
+							input#vendorDetails1.form-control(type="text" name="vendorDetails" autocomplete="off" required)
 						.form-group
 							label(for='assetType') Asset Type
 							select#assetType1.form-control(required='' autocomplete="off")
@@ -130,15 +139,6 @@ body
 								option(value="4") Charger 
 								option(value='5') Keyboard 
 								option(value="6") Mouse
-						.form-group
-							label(for="manufacturer") Manufacture
-							input#manufacturer1.form-control(type="text" name="manufacturer" autocomplete="off" required)
-						.form-group
-							label(for="purchaseDate") Purchase Date
-							input#purchaseDate1.form-control(type="date" name="purchaseDate" autocomplete="off" required)
-						.form-group
-							label(for="vendorDetails") Vendor Details
-							input#vendorDetails1.form-control(type="text" name="vendorDetails" autocomplete="off" required)
 						.form-group
 							label(for="specification") Specification
 							textarea#specification1.form-control(name="specification" rows="4" autocomplete="off" required)
