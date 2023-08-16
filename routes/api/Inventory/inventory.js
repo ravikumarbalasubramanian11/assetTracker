@@ -8,7 +8,8 @@ exports.create = async (req, res) => {
 			manufacturer,
 			vendorDetails,
 			purchaseDate,
-			spec
+			spec,
+			assetType
 		} = req.body;
 
 		if (!assetName) {
@@ -47,6 +48,12 @@ exports.create = async (req, res) => {
 				message: 'Spec is required'
 			})
 		}
+		if (!assetType) {
+			return res.send({
+				success: false,
+				message: 'Asset Type is required'
+			})
+		}
 
 		const create = await models.Inventory.create({
 			assetName: assetName,
@@ -54,6 +61,7 @@ exports.create = async (req, res) => {
 			manufacturer: manufacturer,
 			purchaseDate: purchaseDate,
 			vendorDetails: vendorDetails,
+			assetType: assetType,
 			spec: spec,
 			status: "Active"
 		})
@@ -211,3 +219,30 @@ exports.edit = async (req, res) => {
 		});
 	}
 };
+
+exports.unassigned = async (req, res) => {
+	try {
+		let unassignedList = await models.Inventory.findAll({
+			where: {
+				UserId: null,
+				status: 'Active',
+				assetType: req.params.assetType
+			},
+			attributes: ["id", "assetName"]
+		})
+
+		return res.status(200).json({
+			success: true,
+			message: unassignedList
+		})
+
+	} catch (err) {
+		console.log({
+			success: false,
+			message: err
+		});
+		return res.status(500).json({
+			"error": `Internal Server Error ${err}`
+		});
+	}
+}

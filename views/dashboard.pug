@@ -120,6 +120,16 @@ body
 							label(for="assetName") Asset name
 							input#assetName1.form-control(type='text' name='assetName' required='')
 						.form-group
+							label(for='assetType') Asset Type
+							select#assetType1.form-control(required='')
+								option(value='') Select Asset Type
+								option(value='1') Laptop
+								option(value='2') PC
+								option(value='3') Mobile 
+								option(value="4") Charger 
+								option(value='5') Keyboard 
+								option(value="6") Mouse
+						.form-group
 							label(for="manufacturer") Manufacture
 							input#manufacturer1.form-control(type="text" name="manufacturer" required)
 						.form-group

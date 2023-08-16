@@ -332,7 +332,7 @@
 						data: null,
 						render: function (data, type, row) {
 							if (row.status === 1) {
-								return '<button class="btn-sm my-2 btn-success cancelled-complaint-btn" data-id="' + row.id + '">Proceed</button>' +
+								return '<button class="btn-sm my-2 btn-success cancelled-complaint-btn" data-id="' + row.id + '" data-assettype="' + row.assetType + '" data-requesttype="' + row.requestType + '" data-UserId="' + row.UserId + '">Proceed</button>' +
 									'<button class="btn-sm btn-danger rejected-complaint-btn" data-id="' + row.id + '">Reject</button>';
 							} else {
 								return '';
@@ -367,6 +367,9 @@
 	} else {
 		$('#ApprovalTable').on('click', '.cancelled-complaint-btn', function () {
 			const requestId = $(this).data('id');
+			const requestType = $(this).data('requesttype');
+			const assetType = $(this).data('assettype');
+			const UserId = $(this).data('userid');
 
 			// var confirmed = confirm("Are you sure you want to approve this request?");
 
@@ -375,7 +378,53 @@
 			// }
 			$('#approvalModal').modal('hide');
 			$('#assignAsset').modal('show');
-			// updateStatus(requestId, 2, "approved");
+
+			$.ajax({
+				url: `http://localhost:3000/api/inventory/unassigned/${assetType}`,
+				method: 'GET',
+				dataType: 'json',
+				success: function (data) {
+					const selectElement = $("#assetSelect");
+					selectElement.empty();
+
+					selectElement.append(new Option('Select an asset to assign', ''));
+					data.message.forEach(function (asset) {
+						selectElement.append(new Option(asset.assetName, asset.id));
+					});
+				},
+				error: function (xhr, status, error) {
+					console.error('API Request Failed:', error);
+				}
+			});
+
+			$("#assignAssetButton").on('click', function () {
+				let selectedOptionValue = $('#assetSelect option:selected').val();
+				if (!selectedOptionValue) {
+					alert("Please Select Asset")
+					return false;
+				};
+
+				$.ajax({
+					url: 'http://localhost:3000/api/inventory/edit/' + selectedOptionValue,
+					type: 'PUT',
+					data: {
+						UserId: UserId,
+					},
+					success: function (response) {
+						console.log(response);
+						if (response.success) {
+							alert("Successfully Saved the changes");
+							$('#assignAsset').modal('hide');
+							updateStatus(requestId, 2, "approved");
+						} else {
+							alert('Failed to save changes: ' + response.message);
+						}
+					},
+					error: function (xhr, textStatus, error) {
+						alert('Error during saving changes: ' + error);
+					}
+				});
+			})
 		});
 	}
 

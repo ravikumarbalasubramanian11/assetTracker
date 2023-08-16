@@ -47,6 +47,7 @@
 		var purchaseDate = $("#purchaseDate1").val();
 		var vendorDetails = $("#vendorDetails1").val();
 		var specification = $("#specification1").val();
+		var assetType = $("#assetType1").val();
 
 		$.ajax({
 			url: "http://localhost:3000/api/inventory/create",
@@ -58,6 +59,7 @@
 				purchaseDate: purchaseDate,
 				vendorDetails: vendorDetails,
 				spec: specification,
+				assetType: assetType
 			},
 			success: function (response) {
 				console.log(response);
@@ -113,8 +115,8 @@
 				},
 				{
 					data: 'User.username',
-					render: function (data, row, type){
-						return data? data: "---";
+					render: function (data, row, type) {
+						return data ? data : "---";
 					}
 				},
 				{

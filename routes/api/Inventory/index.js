@@ -8,5 +8,6 @@ router.get('/get', inventory.get);
 router.get('/inventorySearchId', helper, inventory.inventorySearchId);
 router.delete('/delete/:id', inventory.delete);
 router.put('/edit/:id', inventory.edit);
+router.get('/unassigned/:assetType', inventory.unassigned);
 
 module.exports = router;
