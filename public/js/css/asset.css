@@ -1,0 +1,36 @@
+table {
+	border-collapse: collapse;
+	border: 1px solid black;
+}
+
+th,
+td {
+	padding: 8px;
+	text-align: left;
+	border: 1px solid black;
+}
+
+.btn-excel {
+	background-color: green;
+	color: white;
+}
+
+.status-bar {
+	display: flex;
+	align-items: center;
+	margin: 10px 0;
+	border: 1px solid #ccc;
+	padding: 10px;
+	border-radius: 10px;
+}
+
+.status-label {
+	width: 150px;
+}
+
+.status-data {
+	flex: 1;
+	background-color: #f0f0f0;
+	height: 20px;
+	margin-left: 20px;
+}

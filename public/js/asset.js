@@ -14,13 +14,24 @@
 			},
 			dataSrc: 'message',
 		},
-		columns: [
-			{ data: 'id' },
-			{ data: 'assetName' },
-			{ data: 'assetId' },
-			{ data: 'manufacturer' },
-			{ data: 'spec' },
-			{ data: 'purchaseDate' },
+		columns: [{
+				data: 'id'
+			},
+			{
+				data: 'assetName'
+			},
+			{
+				data: 'assetId'
+			},
+			{
+				data: 'manufacturer'
+			},
+			{
+				data: 'spec'
+			},
+			{
+				data: 'purchaseDate'
+			},
 			{
 				data: '',
 				render: function (data, type, row) {
@@ -104,8 +115,9 @@
 					},
 					dataSrc: 'message',
 				},
-				columns: [
-					{ data: 'id' },
+				columns: [{
+						data: 'id'
+					},
 					{
 						data: "createdAt",
 						render: function (data, type, row) {
@@ -118,7 +130,9 @@
 							return request[row.requestType];
 						}
 					},
-					{ data: 'issue' },
+					{
+						data: 'issue'
+					},
 					{
 						data: 'assetType',
 						render: function (data, type, row) {
@@ -147,7 +161,10 @@
 							}
 						}
 					}
-				], order: [[4, 'asc']]
+				],
+				order: [
+					[4, 'asc']
+				]
 			});
 		}
 
@@ -166,14 +183,16 @@
 				url: 'http://localhost:3000/api/request/approve/' + requestId,
 				method: 'PUT',
 				contentType: 'application/json',
-				data: JSON.stringify({ status: 3 }),
+				data: JSON.stringify({
+					status: 3
+				}),
 				headers: {
 					'x-at-sessiontoken': localStorage.getItem('token')
 				},
 				success: function (data) {
 					console.log('Request cancelled successfully:', data);
 					alert("Request cancelled successfully");
-					tableTransaction.ajax.reload(); // Use tableTransaction here
+					tableTransaction.ajax.reload();
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
 					console.log('Failed to cancel request', errorThrown);
@@ -258,8 +277,9 @@
 					},
 					dataSrc: 'data',
 				},
-				columns: [
-					{ data: 'id' },
+				columns: [{
+						data: 'id'
+					},
 					{
 						data: "createdAt",
 						render: function (data, type, row) {
@@ -272,7 +292,9 @@
 							return request[row.requestType];
 						}
 					},
-					{ data: 'issue' },
+					{
+						data: 'issue'
+					},
 					{
 						data: 'assetType',
 						render: function (data, type, row) {
@@ -302,7 +324,10 @@
 							}
 						}
 					}
-				], order: [[4, 'asc']],
+				],
+				order: [
+					[4, 'asc']
+				],
 				success: function (response) {
 					console.log("API Response Data:", response.message);
 				},
@@ -316,21 +341,40 @@
 	if (username !== 'hr') {
 		$('#ApprovalTable').on('click', '.cancelled-complaint-btn', function () {
 			const requestId = $(this).data('id');
-			updateStatus(requestId, 1);
+
+			var confirmed = confirm("Are you sure you want to proceed this request?");
+
+			if (!confirmed) {
+				return;
+			}
+			updateStatus(requestId, 1, "proceed");
 		});
-	} else{
+	} else {
 		$('#ApprovalTable').on('click', '.cancelled-complaint-btn', function () {
 			const requestId = $(this).data('id');
-			updateStatus(requestId, 2);
+
+			var confirmed = confirm("Are you sure you want to approve this request?");
+
+			if (!confirmed) {
+				return;
+			}
+
+			updateStatus(requestId, 2, "approved");
 		});
 	}
 
 	$('#ApprovalTable').on('click', '.rejected-complaint-btn', function () {
 		const requestId = $(this).data('id');
-		updateStatus(requestId, 4);
+		var confirmed = confirm("Are you sure you want to reject this request?");
+
+		if (!confirmed) {
+			return;
+		}
+
+		updateStatus(requestId, 4, "rejected");
 	});
 
-	function updateStatus(id, newStatus) {
+	function updateStatus(id, newStatus, message) {
 		$.ajax({
 			url: `http://localhost:3000/api/request/approve/${id}`,
 			type: 'PUT',
@@ -338,10 +382,13 @@
 			headers: {
 				'x-at-sessiontoken': localStorage.getItem('token')
 			},
-			data: JSON.stringify({ status: newStatus }),
+			data: JSON.stringify({
+				status: newStatus
+			}),
 			success: function (response) {
+				alert("Successfully " + message + " the request")
 				console.log('Status updated successfully:', response);
-				reloadTables();
+				approvalModal.ajax.reload();
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
 				console.log('Failed to update status', errorThrown);
