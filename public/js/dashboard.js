@@ -65,6 +65,7 @@
 				if (response.success) {
 					alert("Device created successfully!");
 					$("#exampleModal").modal("hide");
+					table.ajax.reload();
 				} else {
 					alert(response.message);
 				}
@@ -178,7 +179,9 @@
 					console.log(response);
 					if (response.success) {
 						table.ajax.reload();
+						alert("Successfully Saved the changes");
 						$('#editModal').modal('hide');
+
 					} else {
 						alert('Failed to save changes: ' + response.message);
 					}

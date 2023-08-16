@@ -36,7 +36,7 @@ body
 							th Manufacturer
 							th Specification
 							th Purchase Date
-							<th class="admin-only">Action</th>
+							th Action
 					tbody
 
 	#complaintModal.modal.fade
@@ -78,7 +78,6 @@ body
 									th Updated
 									th Action
 
-
 #approvalModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='approvalModalLabel' aria-hidden='true')
 	.modal-dialog.modal-lg(role='document')
 		.modal-content
@@ -101,11 +100,6 @@ body
 									th Updated
 									th Action
 
-			.modal-footer
-				button.btn.btn-secondary(type='button' data-dismiss='modal') Close
-				button.btn.btn-primary(type='button') Request
-
-
 #raiseRequestModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='raiseRequestModalLabel' aria-hidden='true')
 	.modal-dialog(role='document')
 		.modal-content
@@ -119,13 +113,16 @@ body
 					select#requestType.form-control(required='')
 						option(value='') Select Request Type
 						option(value='1') Request for Asset
-						option(value='2') Request for Service
 				.form-group
 					label(for='assetType') Asset Type
 					select#assetType.form-control(required='')
 						option(value='') Select Asset Type
 						option(value='1') Laptop
 						option(value='2') PC
+						option(value='3') Mobile 
+						option(value="4") Charger 
+						option(value='5') Keyboard 
+						option(value="6") Mouse
 			.modal-footer
 				button.btn.btn-secondary(type='button' data-dismiss='modal') Close
 				button#submitRequestBtn.btn.btn-primary(type='button') Submit Request

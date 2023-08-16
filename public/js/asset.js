@@ -101,7 +101,10 @@
 	var asset = {
 		1: "Laptop",
 		2: "PC",
-		3: "Mobile"
+		3: "Mobile",
+		4: "Charger",
+		5: "Keyboard",
+		6: "Mouse"
 	}
 
 	$('#transactionButton').on("click", function () {
@@ -134,12 +137,15 @@
 						}
 					},
 					{
-						data: 'issue'
+						data: 'issue',
+						render: function (data, type, row) {
+							return data ? data : '----';
+						}
 					},
 					{
 						data: 'assetType',
 						render: function (data, type, row) {
-							return data ? asset[data] : 'N/A';
+							return data ? asset[data] : '----';
 						}
 					},
 					{
@@ -296,12 +302,15 @@
 						}
 					},
 					{
-						data: 'issue'
+						data: 'issue',
+						render: function (data, type, row) {
+							return data ? data : '----';
+						}
 					},
 					{
 						data: 'assetType',
 						render: function (data, type, row) {
-							return data ? asset[data] : 'N/A';
+							return data ? asset[data] : '----';
 						}
 					},
 					{
