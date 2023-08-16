@@ -1,138 +1,138 @@
 doctype html
 html
-  head
-    title Dashboard
-    link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css')
-    script(type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js')
-    link(rel='stylesheet' href='https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css')
-    link(href='https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.13.4/b-2.3.6/b-html5-2.3.6/b-print-2.3.6/datatables.min.css' rel='stylesheet')
-    link(href='https://cdn.datatables.net/v/dt/b-2.3.6/b-html5-2.3.6/datatables.css' rel='stylesheet')
-    link(rel='stylesheet' type='text/css' href='https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap.min.css')
-    link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css')
-    link(rel='stylesheet' href='js/css/dashboard.css')
+	head
+		title Dashboard
+		link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css')
+		script(type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js')
+		link(rel='stylesheet' href='https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css')
+		link(href='https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.13.4/b-2.3.6/b-html5-2.3.6/b-print-2.3.6/datatables.min.css' rel='stylesheet')
+		link(href='https://cdn.datatables.net/v/dt/b-2.3.6/b-html5-2.3.6/datatables.css' rel='stylesheet')
+		link(rel='stylesheet' type='text/css' href='https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap.min.css')
+		link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css')
+		link(rel='stylesheet' href='js/css/dashboard.css')
 body
-  .container-fluid 
-    .row.bg-secondary 
-      .col-6 
-        h2.py-3.px-2.text-light  Asset Tracker
-      .col-6.d-flex.flex-row.justify-content-end
-        h5.align-items-center.pt-4.px-2.text-light#username
-  .container
-    .row.py-2
-      .col-6
-        h3#tableHeading(style='display: none;') Asset Management
-      .col-6.d-flex.flex-row.justify-content-end.text-end
-        button#myModal.btn.btn-secondary(style='display: none;') Create Device
-      .col-12.my-3
-        table#myTable
-          thead
-            tr
-              th Id
-              th Asset Name
-              th Asset Id
-              th Manufacturer
-              th Vendor Details
-              th Purchase Date
-              th Specification
-              th Assigned to
-              th Status
-              <th class="admin-only">Action</th>
-          tbody
-  #editModal.modal(tabindex='-1' role='dialog')
-    .modal-dialog(role='document')
-      .modal-content
-        .modal-header
-          h5.modal-title Edit Device
-          button.close(type='button' data-dismiss='modal' aria-label='Close')
-            span(aria-hidden='true') ×
-        .modal-body
-          form
-            .form-group
-              label(for='assetId') Asset ID
-              input#assetId.form-control(type='text')
-            .form-group
-              label(for='assetName') Asset Name
-              input#assetName.form-control(type='text')
-            .form-group
-              label(for='manufacturer') Manufacturer
-              input#manufacturer.form-control(type='text')
-            .form-group
-              label(for='purchaseDate') Purchase Date
-              input#purchaseDate.form-control(type='date')
-            .form-group
-              label(for='vendorDetails') Vendor Details
-              input#vendorDetails.form-control(type='text')
-            .form-group
-              label(for='specification') Specification
-              textarea#specification.form-control(rows='4')
-            .form-group
-              label(for='status') Status
-              select#status.form-control(name='status')
-                option(value='Active') Active
-                option(value='Inactive') Inactive
-                option(value='UnderService') UnderService
-            .form-group
-              label(for='assignedTo') Assigned to
-              select#assignedTo.form-control(name='assignedTo')
-                option(value='' disabled='' selected='') Select an option
+	.container-fluid 
+		.row.bg-secondary 
+			.col-6 
+				h2.py-3.px-2.text-light  Asset Tracker
+			.col-6.d-flex.flex-row.justify-content-end
+				h5.align-items-center.pt-4.px-2.text-light#username
+	.container
+		.row.py-2
+			.col-6
+				h3#tableHeading(style='display: none;') Asset Management
+			.col-6.d-flex.flex-row.justify-content-end.text-end
+				button#myModal.btn.btn-secondary(style='display: none;') Create Device
+			.col-12.my-3
+				table#myTable
+					thead
+						tr
+							th Id
+							th Asset Name
+							th Asset Id
+							th Manufacturer
+							th Vendor Details
+							th Purchase Date
+							th Specification
+							th Assigned to
+							th Status
+							<th class="admin-only">Action</th>
+					tbody
+	#editModal.modal(tabindex='-1' role='dialog')
+		.modal-dialog(role='document')
+			.modal-content
+				.modal-header
+					h5.modal-title Edit Device
+					button.close(type='button' data-dismiss='modal' aria-label='Close')
+						span(aria-hidden='true') ×
+				.modal-body
+					form
+						.form-group
+							label(for='assetId') Asset ID
+							input#assetId.form-control(type='text')
+						.form-group
+							label(for='assetName') Asset Name
+							input#assetName.form-control(type='text')
+						.form-group
+							label(for='manufacturer') Manufacturer
+							input#manufacturer.form-control(type='text')
+						.form-group
+							label(for='purchaseDate') Purchase Date
+							input#purchaseDate.form-control(type='date')
+						.form-group
+							label(for='vendorDetails') Vendor Details
+							input#vendorDetails.form-control(type='text')
+						.form-group
+							label(for='specification') Specification
+							textarea#specification.form-control(rows='4')
+						.form-group
+							label(for='status') Status
+							select#status.form-control(name='status')
+								option(value='Active') Active
+								option(value='Inactive') Inactive
+								option(value='UnderService') UnderService
+						.form-group
+							label(for='assignedTo') Assigned to
+							select#assignedTo.form-control(name='assignedTo')
+								option(value='' disabled='' selected='') Select an option
 
-        .modal-footer
-          button.btn.btn-secondary(type='button' data-dismiss='modal') Close
-          button#saveEdit.btn.btn-primary(type='button') Save Changes
+				.modal-footer
+					button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+					button#saveEdit.btn.btn-primary(type='button') Save Changes
 
-  #requestModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='requestModalLabel' aria-hidden='true')
-    .modal-dialog(role='document')
-      .modal-content
-        .modal-header
-          h5#requestModalLabel.modal-title Raise a Request
-          button.close(type='button' data-dismiss='modal' aria-label='Close')
-            span(aria-hidden='true') ×
-        .modal-body
-          .form-group
-            label(for='requestType') Request Type
-            select#requestType.form-control(required='')
-              option(value='') Select Request Type
-              option(value='1') Request for Asset
-          .form-group
-            label(for='assetType') Asset Type
-            select#assetType.form-control(required='')
-              option(value='') Select Asset Type
-              option(value='1') Laptop
-              option(value='2') PC
-        .modal-footer
-          button.btn.btn-secondary(type='button' data-dismiss='modal') Close
-          button#submitRequestBtn.btn.btn-primary(type='button') Submit Request
+	#requestModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='requestModalLabel' aria-hidden='true')
+		.modal-dialog(role='document')
+			.modal-content
+				.modal-header
+					h5#requestModalLabel.modal-title Raise a Request
+					button.close(type='button' data-dismiss='modal' aria-label='Close')
+						span(aria-hidden='true') ×
+				.modal-body
+					.form-group
+						label(for='requestType') Request Type
+						select#requestType.form-control(required='')
+							option(value='') Select Request Type
+							option(value='1') Request for Asset
+					.form-group
+						label(for='assetType') Asset Type
+						select#assetType.form-control(required='')
+							option(value='') Select Asset Type
+							option(value='1') Laptop
+							option(value='2') PC
+				.modal-footer
+					button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+					button#submitRequestBtn.btn.btn-primary(type='button') Submit Request
 
-  .modal.fade#exampleModal(tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true")
-      .modal-dialog(role="document")
-        .modal-content
-          .modal-header
-            h5.modal-title#exampleModalLabel Create Device
-            button.close(type="button", data-dismiss="modal", aria-label="Close")
-              span(aria-hidden="true") &times;
-          .modal-body
-            form
-              .form-group
-                label(for="assetId") Asset ID
-                input#assetId1.form-control(type="text", name="assetId" required)
-              .form-group
-                label(for="assetName") Asset name
-                input#assetName1.form-control(type='text' name='assetName' required='')
-              .form-group
-                label(for="manufacturer") Manufacture
-                input#manufacturer1.form-control(type="text", name="manufacturer" required)
-              .form-group
-                label(for="purchaseDate") Purchase Date
-                input#purchaseDate1.form-control(type="date", name="purchaseDate" required)
-              .form-group
-                label(for="vendorDetails") Vendor Details
-                input#vendorDetails1.form-control(type="text", name="vendorDetails" required)
-              .form-group
-                label(for="specification") Specification
-                textarea#specification1.form-control(name="specification" rows="4" required)
-          .modal-footer
-            button.btn.btn-secondary(type="button" data-dismiss="modal") Close
-            button#saveDevice.btn.btn-primary(type="button") Save Device
+	.modal.fade#exampleModal(tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true")
+		.modal-dialog(role="document")
+			.modal-content
+				.modal-header
+					h5.modal-title#exampleModalLabel Create Device
+					button.close(type="button" data-dismiss="modal" aria-label="Close")
+						span(aria-hidden="true") &times;
+				.modal-body
+					form
+						.form-group
+							label(for="assetId") Asset ID
+							input#assetId1.form-control(type="text" name="assetId" required)
+						.form-group
+							label(for="assetName") Asset name
+							input#assetName1.form-control(type='text' name='assetName' required='')
+						.form-group
+							label(for="manufacturer") Manufacture
+							input#manufacturer1.form-control(type="text" name="manufacturer" required)
+						.form-group
+							label(for="purchaseDate") Purchase Date
+							input#purchaseDate1.form-control(type="date" name="purchaseDate" required)
+						.form-group
+							label(for="vendorDetails") Vendor Details
+							input#vendorDetails1.form-control(type="text" name="vendorDetails" required)
+						.form-group
+							label(for="specification") Specification
+							textarea#specification1.form-control(name="specification" rows="4" required)
+				.modal-footer
+					button.btn.btn-secondary(type="button" data-dismiss="modal") Close
+					button#saveDevice.btn.btn-primary(type="button") Save Device
 script(type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js')
 script(src='https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js')
 script(type='text/javascript' charset='utf8' src='https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js')

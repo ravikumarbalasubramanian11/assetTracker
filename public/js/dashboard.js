@@ -1,5 +1,8 @@
 (async () => {
 	var username = localStorage.getItem("username");
+
+	var DisplayUsername = username.charAt(0).toUpperCase() + username.slice(1);
+
 	var usersDataMap = {};
 	var editedRowData;
 
@@ -72,7 +75,7 @@
 		});
 	});
 
-	$("#username").text(username || "Default Username");
+	$("#username").text(DisplayUsername || "Default Username");
 
 	if (username === 'hr') {
 		setTimeout(() => {

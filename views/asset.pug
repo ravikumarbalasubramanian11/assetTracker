@@ -1,128 +1,133 @@
 doctype html
 html
-  head
-    title Asset
-    link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css')
-    script(type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js')
-    link(rel='stylesheet' href='https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css')
-    link(href='https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.13.4/b-2.3.6/b-html5-2.3.6/b-print-2.3.6/datatables.min.css' rel='stylesheet')
-    link(href='https://cdn.datatables.net/v/dt/b-2.3.6/b-html5-2.3.6/datatables.css' rel='stylesheet')
-    link(rel='stylesheet' type='text/css' href='https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap.min.css')
-    link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css')
-    link(rel='stylesheet' href='js/css/asset.css')
+	head
+		title Asset
+		link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css')
+		script(type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js')
+		link(rel='stylesheet' href='https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css')
+		link(href='https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.13.4/b-2.3.6/b-html5-2.3.6/b-print-2.3.6/datatables.min.css' rel='stylesheet')
+		link(href='https://cdn.datatables.net/v/dt/b-2.3.6/b-html5-2.3.6/datatables.css' rel='stylesheet')
+		link(rel='stylesheet' type='text/css' href='https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap.min.css')
+		link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css')
+		link(rel='stylesheet' href='js/css/asset.css')
 body
-  h3.bg-secondary.py-3.px-2.text-light Asset Tracker
-  .container
-    .row.py-2
-      .col-6
-        h3#tableHeading Asset List
-      .col-6.d-flex.flex-row.justify-content-end
-        button.btn.btn-secondary#approvalButton Approval
-        button.btn.btn-secondary#transactionButton.mx-2  Transaction
-        button#requestAsset.btn.btn-secondary Request for asset
-      .col-12.my-3
-        table#myTable
-          thead
-            tr
-              th Id
-              th Asset Name
-              th Asset Id
-              th Manufacturer
-              th Specification
-              th Purchase Date
-              <th class="admin-only">Action</th>
-          tbody
+	.container-fluid 
+		.row.bg-secondary 
+			.col-6 
+				h2.py-3.px-2.text-light  Asset Tracker
+			.col-6.d-flex.flex-row.justify-content-end
+				h5.align-items-center.pt-4.px-2.text-light#username
+	.container
+		.row.py-2
+			.col-6
+				h3#tableHeading Asset List
+			.col-6.d-flex.flex-row.justify-content-end
+				button.btn.btn-secondary#approvalButton Approval
+				button.btn.btn-secondary#transactionButton.mx-2  Transaction
+				button#requestAsset.btn.btn-secondary Request for asset
+			.col-12.my-3
+				table#myTable
+					thead
+						tr
+							th Id
+							th Asset Name
+							th Asset Id
+							th Manufacturer
+							th Specification
+							th Purchase Date
+							<th class="admin-only">Action</th>
+					tbody
 
-  #complaintModal.modal.fade
-    .modal-dialog
-        .modal-content
-          .modal-header
-              h5.modal-title Raise Complaint
-              button.close(type='button' data-dismiss='modal') ×
-          .modal-body
-              label(for='complaintSubject') Asset
-              input#complaintSubject.form-control(type='text' placeholder='Complaint Subject' readonly)
-              label(for='complaintDescription') Complaint Description
-              textarea#complaintDescription.form-control(placeholder='Complaint Description')
-          .modal-footer
-              button#submitComplaint.btn.btn-primary Submit
-              button.btn.btn-secondary(type='button' data-dismiss='modal') Cancel
+	#complaintModal.modal.fade
+		.modal-dialog
+			.modal-content
+				.modal-header
+					h5.modal-title Raise Complaint
+					button.close(type='button' data-dismiss='modal') ×
+				.modal-body
+					label(for='complaintSubject') Asset
+					input#complaintSubject.form-control(type='text' placeholder='Complaint Subject' readonly)
+					label(for='complaintDescription') Complaint Description
+					textarea#complaintDescription.form-control(placeholder='Complaint Description')
+				.modal-footer
+					button#submitComplaint.btn.btn-primary Submit
+					button.btn.btn-secondary(type='button' data-dismiss='modal') Cancel
 
 
 // Modal
 #transactionModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='transactionModalLabel' aria-hidden='true')
-  .modal-dialog.modal-lg(role='document')
-    .modal-content
-      .modal-header
-        h5#transactionModalLabel.modal-title Transactions
-        button.close(type='button' data-dismiss='modal' aria-label='Close')
-          span(aria-hidden='true') ×
-      .modal-body 
-        .row
-          .col-12
-            table#TransactionTable
-              thead
-                tr
-                  th Id
-                  th Date
-                  th Request Type
-                  th Issue
-                  th Asset Type
-                  th Status
-                  th Updated
-                  th Action
+	.modal-dialog.modal-lg(role='document')
+		.modal-content
+			.modal-header
+				h5#transactionModalLabel.modal-title Transactions
+				button.close(type='button' data-dismiss='modal' aria-label='Close')
+					span(aria-hidden='true') ×
+			.modal-body 
+				.row
+					.col-12
+						table#TransactionTable
+							thead
+								tr
+									th Id
+									th Date
+									th Request Type
+									th Issue
+									th Asset Type
+									th Status
+									th Updated
+									th Action
 
 
 #approvalModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='approvalModalLabel' aria-hidden='true')
-  .modal-dialog.modal-lg(role='document')
-    .modal-content
-      .modal-header
-        h5.modal-title Approval
-        button.close(type='button' data-dismiss='modal' aria-label='Close')
-          span(aria-hidden='true') ×
-      .modal-body 
-        .row
-          .col-12
-            table#ApprovalTable
-              thead
-                tr
-                  th Id
-                  th Date
-                  th Request Type
-                  th Issue
-                  th Asset Type
-                  th Status
-                  th Updated
-                  th Action
+	.modal-dialog.modal-lg(role='document')
+		.modal-content
+			.modal-header
+				h5.modal-title Approval
+				button.close(type='button' data-dismiss='modal' aria-label='Close')
+					span(aria-hidden='true') ×
+			.modal-body 
+				.row
+					.col-12
+						table#ApprovalTable
+							thead
+								tr
+									th Id
+									th Date
+									th Request Type
+									th Issue
+									th Asset Type
+									th Status
+									th Updated
+									th Action
 
-      .modal-footer
-        button.btn.btn-secondary(type='button' data-dismiss='modal') Close
-        button.btn.btn-primary(type='button') Request
+			.modal-footer
+				button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+				button.btn.btn-primary(type='button') Request
 
 
 #raiseRequestModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='raiseRequestModalLabel' aria-hidden='true')
-  .modal-dialog(role='document')
-    .modal-content
-      .modal-header
-        h5#raiseRequestModalLabel.modal-title Raise a Request
-        button.close(type='button' data-dismiss='modal' aria-label='Close')
-          span(aria-hidden='true') ×
-      .modal-body
-        .form-group
-          label(for='requestType') Request Type
-          select#requestType.form-control(required='')
-            option(value='') Select Request Type
-            option(value='1') Request for Asset
-            option(value='2') Request for Service
-        .form-group
-          label(for='assetType') Asset Type
-          select#assetType.form-control(required='')
-            option(value='') Select Asset Type
-            option(value='1') Laptop
-            option(value='2') PC
-      .modal-footer
-        button.btn.btn-secondary(type='button' data-dismiss='modal') Close
-        button#submitRequestBtn.btn.btn-primary(type='button') Submit Request
+	.modal-dialog(role='document')
+		.modal-content
+			.modal-header
+				h5#raiseRequestModalLabel.modal-title Raise a Request
+				button.close(type='button' data-dismiss='modal' aria-label='Close')
+					span(aria-hidden='true') ×
+			.modal-body
+				.form-group
+					label(for='requestType') Request Type
+					select#requestType.form-control(required='')
+						option(value='') Select Request Type
+						option(value='1') Request for Asset
+						option(value='2') Request for Service
+				.form-group
+					label(for='assetType') Asset Type
+					select#assetType.form-control(required='')
+						option(value='') Select Asset Type
+						option(value='1') Laptop
+						option(value='2') PC
+			.modal-footer
+				button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+				button#submitRequestBtn.btn.btn-primary(type='button') Submit Request
 
 
 script(type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js')
