@@ -11,8 +11,8 @@ module.exports = (sequelize, Sequelize) => {
 		assetType: {
 			type: Sequelize.INTEGER, // 1: Laptop, 2: PC, 3: Mobile
 		},
-		stage:{
-			type: Sequelize.INTEGER,  // person who pass (or) approve the application most recently
+		stage: {
+			type: Sequelize.INTEGER, // person who pass (or) approve the application most recently
 		},
 		status: {
 			type: Sequelize.INTEGER, // 1: Pending, 2: Completed, 3: Cancelled, 4: Rejected  5:Resolved
