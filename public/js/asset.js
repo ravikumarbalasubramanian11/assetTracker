@@ -1,8 +1,11 @@
 (async () => {
 	var username = localStorage.getItem("username");
+	var DisplayUsername = username.charAt(0).toUpperCase() + username.slice(1);
 	var id;
 	var tableTransaction;
 	var approvalModal;
+
+	$("#username").text(DisplayUsername || "Default Username");
 
 	var table = $('#myTable').DataTable({
 		ajax: {
