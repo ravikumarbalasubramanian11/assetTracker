@@ -28,15 +28,24 @@ exports.create = async (req, res) => {
 		} = req.body;
 
 		if (!email) {
-			return res.send({ success: false, message: "Missing email Id" });
+			return res.send({
+				success: false,
+				message: "Missing email Id"
+			});
 		}
 
 		if (!username) {
-			return res.send({ success: false, message: "Missing username" });
+			return res.send({
+				success: false,
+				message: "Missing username"
+			});
 		}
 
 		if (!password) {
-			return res.send({ success: false, message: "Enter a valid Password" });
+			return res.send({
+				success: false,
+				message: "Enter a valid Password"
+			});
 		}
 
 		const hashPassword = await bcrypt.hash(password, 11);
@@ -49,21 +58,34 @@ exports.create = async (req, res) => {
 			password: hashPassword
 		})
 
-		return res.send({ success: true, message: "User Created Successfully" })
-	}
-	catch (err) {
-		console.log({ success: false, message: err });
-		return res.status(500).json({ "error": `Internal Server Error ${err}` });
+		return res.send({
+			success: true,
+			message: "User Created Successfully"
+		})
+	} catch (err) {
+		console.log({
+			success: false,
+			message: err
+		});
+		return res.status(500).json({
+			"error": `Internal Server Error ${err}`
+		});
 	}
 }
 
 exports.login = async (req, res) => {
 	try {
-		const { username, password } = req.body;
+		const {
+			username,
+			password
+		} = req.body;
 
 		console.log(req.body);
 		if (!username || !password) {
-			return res.send({ success: false, message: 'Username and password missing' });
+			return res.send({
+				success: false,
+				message: 'Username and password missing'
+			});
 		}
 
 		let login = await models.User.findOne({
@@ -74,14 +96,20 @@ exports.login = async (req, res) => {
 		});
 
 		if (!login) {
-			return res.send({ success: false, message: "Invalid username and password" });
+			return res.send({
+				success: false,
+				message: "Invalid username and password"
+			});
 		}
 
 		const isPasswordValid = await bcrypt.compare(password, login.password);
 
 		console.log(isPasswordValid);
 		if (!isPasswordValid) {
-			return res.send({ success: false, message: "Invalid username and password" });
+			return res.send({
+				success: false,
+				message: "Invalid username and password"
+			});
 		}
 
 		const secretKey = '987654321';
@@ -93,16 +121,30 @@ exports.login = async (req, res) => {
 		const token = jwt.sign(payload, secretKey);
 
 		if (isPasswordValid) {
-			return res.status(200).send({ success: true, message: "Successfully login ", token, username });
+			return res.status(200).send({
+				success: true,
+				message: "Successfully login ",
+				token,
+				username
+			});
 		}
 	} catch (err) {
-		console.log({ success: false, message: err });
-		return res.status(500).json({ "error": `Internal Server Error ${err}` });
+		console.log({
+			success: false,
+			message: err
+		});
+		return res.status(500).json({
+			"error": `Internal Server Error ${err}`
+		});
 	}
 }
 
 async function getEmployeeHierarchy(userId) {
-	const user = await models.User.findOne({ where: { id: userId } });
+	const user = await models.User.findOne({
+		where: {
+			id: userId
+		}
+	});
 
 	if (!user) {
 		return [];
@@ -114,14 +156,22 @@ async function getEmployeeHierarchy(userId) {
 
 exports.hierarchy = async (req, res) => {
 	try {
-		const { id } = req.body;
+		const {
+			id
+		} = req.body;
 
 		const employeeIdsInHierarchy = await getEmployeeHierarchy(id);
 
-		return res.send({ success: true, employeeIds: employeeIdsInHierarchy });
+		return res.send({
+			success: true,
+			employeeIds: employeeIdsInHierarchy
+		});
 	} catch (err) {
 		console.log("./api/user/getEmployeeIdsInHierarchy Error: ", err);
-		return res.send({ success: false, message: "Internal server error" });
+		return res.send({
+			success: false,
+			message: "Internal server error"
+		});
 	}
 };
 
@@ -131,9 +181,16 @@ exports.userList = async (req, res) => {
 			attributes: ['id', 'username']
 		});
 
-		return res.json({ success: true, message: "User list fetched successfully", data: users });
+		return res.json({
+			success: true,
+			message: "User list fetched successfully",
+			data: users
+		});
 	} catch (err) {
 		console.error("Error:", err);
-		return res.status(500).json({ success: false, message: "Internal server error" });
+		return res.status(500).json({
+			success: false,
+			message: "Internal server error"
+		});
 	}
 };

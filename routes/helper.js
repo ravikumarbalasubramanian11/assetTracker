@@ -6,17 +6,27 @@ function requireAuth(req, res, next) {
 		const token = req.headers['x-at-sessiontoken'];
 
 		if (!token) {
-			return res.status(401).json({ success: false, message: 'Token not provided' });
+			return res.status(401).json({
+				success: false,
+				message: 'Token not provided'
+			});
 		}
 		const decoded = jwt.verify(token, secretKey);
 		if (!decoded.username || !decoded.id) {
-			return res.status(401).json({ success: false, message: 'Invalid token data' });
+			return res.status(401).json({
+				success: false,
+				message: 'Invalid token data'
+			});
 		}
 		res.locals.id = decoded.id;
 		console.log("Id of the user login = ", decoded.id)
 		next();
 	} catch (err) {
-		return res.status(401).json({ success: false, message: 'Invalid token', error: err.message });
+		return res.status(401).json({
+			success: false,
+			message: 'Invalid token',
+			error: err.message
+		});
 	}
 }
 

@@ -2,24 +2,46 @@ const models = require("../../../modals");
 
 exports.create = async (req, res) => {
 	try {
-		const { requestType, issue, UserId, InventoryId, assetType } = req.body;
+		const {
+			requestType,
+			issue,
+			UserId,
+			InventoryId,
+			assetType
+		} = req.body;
 
 		if (![1, 2, 3].includes(Number(requestType))) {
-			return res.status(400).json({ success: false, message: "Invalid requestType" });
+			return res.status(400).json({
+				success: false,
+				message: "Invalid requestType"
+			});
 		}
 
 		if (issue && typeof issue !== "string") {
-			return res.status(400).json({ success: false, message: "Invalid issue. It must be a string." });
+			return res.status(400).json({
+				success: false,
+				message: "Invalid issue. It must be a string."
+			});
 		}
 
 		if (UserId < 0) {
-			return res.status(400).json({ success: false, message: "Invalid UserId" });
+			return res.status(400).json({
+				success: false,
+				message: "Invalid UserId"
+			});
 		}
 
-		const user = await models.User.findOne({ where: { id: res.locals.id } });
+		const user = await models.User.findOne({
+			where: {
+				id: res.locals.id
+			}
+		});
 
 		if (!user) {
-			return res.status(400).json({ success: false, message: "Invalid UserId" });
+			return res.status(400).json({
+				success: false,
+				message: "Invalid UserId"
+			});
 		}
 
 		const hierarchyId = user.hierarchyId;
@@ -34,7 +56,10 @@ exports.create = async (req, res) => {
 			});
 
 			if (existingPendingRequest) {
-				return res.status(400).json({ success: false, message: "Another pending request already exists for this InventoryId." });
+				return res.status(400).json({
+					success: false,
+					message: "Another pending request already exists for this InventoryId."
+				});
 			}
 		}
 
@@ -48,10 +73,17 @@ exports.create = async (req, res) => {
 			InventoryId: InventoryId
 		});
 
-		return res.status(201).json({ success: true, message: "Request created successfully!", data: createdRequest });
+		return res.status(201).json({
+			success: true,
+			message: "Request created successfully!",
+			data: createdRequest
+		});
 	} catch (err) {
 		console.error("Error:", err);
-		return res.status(500).json({ success: false, error: `Internal Server Error: ${err}` });
+		return res.status(500).json({
+			success: false,
+			error: `Internal Server Error: ${err}`
+		});
 	}
 };
 
@@ -63,108 +95,152 @@ exports.getRequest = async (req, res) => {
 			}
 		});
 
-		return res.status(200).json({ success: true, data: requests });
+		return res.status(200).json({
+			success: true,
+			data: requests
+		});
 	} catch (err) {
 		console.error("Error:", err);
-		return res.status(500).json({ success: false, error: `Internal Server Error: ${err}` });
+		return res.status(500).json({
+			success: false,
+			error: `Internal Server Error: ${err}`
+		});
 	}
 };
 
 exports.approve = async (req, res) => {
 	try {
-		const { status } = req.body;
+		const {
+			status
+		} = req.body;
 		const id = req.params.id;
 
 		if (!Number.isInteger(Number(status)) || Number(status) <= 0) {
-			return res.status(400).json({ error: "Status must be a positive integer." });
+			return res.status(400).json({
+				error: "Status must be a positive integer."
+			});
 		}
 
-		const request = await models.Request.findOne({ where: { id } });
+		const request = await models.Request.findOne({
+			where: {
+				id
+			}
+		});
 
 		if (!request) {
-			return res.status(404).json({ success: false, message: "Request not found" });
+			return res.status(404).json({
+				success: false,
+				message: "Request not found"
+			});
 		}
 
 		if (request.UserId === res.locals.id) {
-			await models.Request.update(
-				{
-					status: 3
-				},
-				{
-					where: {
-						id: id,
-						status: 1
-					}
+			await models.Request.update({
+				status: 3
+			}, {
+				where: {
+					id: id,
+					status: 1
 				}
-			);
+			});
 
-			return res.status(200).json({ success: true, message: "Successfully cancelled the request" })
+			return res.status(200).json({
+				success: true,
+				message: "Successfully cancelled the request"
+			})
 		}
 
-		const user = await models.User.findOne({ where: { id: res.locals.id } });
+		const user = await models.User.findOne({
+			where: {
+				id: res.locals.id
+			}
+		});
 		const hierarchyId = user.hierarchyId;
 
 		if (!user) {
-			return res.status(400).json({ success: false, message: "Invalid UserId" });
+			return res.status(400).json({
+				success: false,
+				message: "Invalid UserId"
+			});
 		}
 
 		if (!hierarchyId) {
-			return res.status(400).json({ success: false, message: "HierarchyId is empty" });
+			return res.status(400).json({
+				success: false,
+				message: "HierarchyId is empty"
+			});
 		}
 
 		if (!(user.id === request.stage)) {
-			return res.status(400).json({ success: false, message: "Invaild to make changes" });
+			return res.status(400).json({
+				success: false,
+				message: "Invaild to make changes"
+			});
 		}
 
 		if (user.username === 'hr') {
 			// HR users can change status to 2 and update the stage
 			if (request.status !== 1) {
-				return res.status(400).json({ success: false, message: "Invalid status change for HR user" });
+				return res.status(400).json({
+					success: false,
+					message: "Invalid status change for HR user"
+				});
 			}
 
 			if (![2, 4].includes(Number(status))) {
-				return res.status(400).json({ success: false, message: "Invalid status change. Status must be 2 or 4." });
+				return res.status(400).json({
+					success: false,
+					message: "Invalid status change. Status must be 2 or 4."
+				});
 			}
 
-			const updatedRequest = await models.Request.update(
-				{
-					status: status,
-					stage: res.locals.id
-				},
-				{
-					where: {
-						id: id,
-						status: 1
-					}
+			const updatedRequest = await models.Request.update({
+				status: status,
+				stage: res.locals.id
+			}, {
+				where: {
+					id: id,
+					status: 1
 				}
-			);
+			});
 
-			return res.status(200).json({ success: true, message: "Request approved by HR", data: updatedRequest });
+			return res.status(200).json({
+				success: true,
+				message: "Request approved by HR",
+				data: updatedRequest
+			});
 		} else {
 			// Non-HR users can change status to 3 or 4, but only if the status is 1
 			// 1: Pending, 2: Completed, 3: Cancelled, 4: Rejected  5:Resolved
 			if (![1, 3, 4].includes(Number(status))) {
-				return res.status(400).json({ success: false, message: "Invalid status change" });
+				return res.status(400).json({
+					success: false,
+					message: "Invalid status change"
+				});
 			}
 
-			const updatedRequest = await models.Request.update(
-				{
-					status: status == null ? request.status : status,
-					stage: hierarchyId
-				},
-				{
-					where: {
-						id: id,
-						status: 1
-					}
+			const updatedRequest = await models.Request.update({
+				status: status == null ? request.status : status,
+				stage: hierarchyId
+			}, {
+				where: {
+					id: id,
+					status: 1
 				}
-			);
+			});
 
-			return res.status(200).json({ success: true, message: "Request approved", data: updatedRequest });
+			return res.status(200).json({
+				success: true,
+				message: "Request approved",
+				data: updatedRequest
+			});
 		}
 	} catch (err) {
 		console.error("Error:", err);
-		return res.status(500).json({ success: false, error: `Internal Server Error: ${err}` });
+		return res.status(500).json({
+			success: false,
+			error: `Internal Server Error: ${err}`
+		});
 	}
 };
 
@@ -185,10 +261,16 @@ exports.transaction = async (req, res) => {
 			statusData[`status${status}`] = response;
 		}
 
-		return res.send({ success: true, statusData: statusData });
+		return res.send({
+			success: true,
+			statusData: statusData
+		});
 	} catch (err) {
 		console.error("Error:", err);
-		return res.status(500).json({ success: false, error: `Internal Server Error: ${err}` });
+		return res.status(500).json({
+			success: false,
+			error: `Internal Server Error: ${err}`
+		});
 	}
 }
 
@@ -197,7 +279,10 @@ exports.requestByStatus = async (req, res) => {
 		const status = parseInt(req.params.status);
 
 		if (status < 0 || status > 5) {
-			return res.status(400).json({ success: false, error: "Invalid status value. Status must be between 0 and 5." });
+			return res.status(400).json({
+				success: false,
+				error: "Invalid status value. Status must be between 0 and 5."
+			});
 		}
 
 		let whereClause = {
@@ -205,7 +290,9 @@ exports.requestByStatus = async (req, res) => {
 		};
 
 		if (status === 0) {
-			whereClause.status = { [models.Sequelize.Op.between]: [1, 5] };
+			whereClause.status = {
+				[models.Sequelize.Op.between]: [1, 5]
+			};
 		} else {
 			whereClause.status = status;
 		}
@@ -214,9 +301,15 @@ exports.requestByStatus = async (req, res) => {
 			where: whereClause
 		});
 
-		return res.status(200).json({ success: true, message: response });
+		return res.status(200).json({
+			success: true,
+			message: response
+		});
 	} catch (err) {
 		console.error("Error:", err);
-		return res.status(500).json({ success: false, error: `Internal Server Error: ${err}` });
+		return res.status(500).json({
+			success: false,
+			error: `Internal Server Error: ${err}`
+		});
 	}
 };
