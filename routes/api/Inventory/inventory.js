@@ -81,7 +81,12 @@ exports.create = async (req, res) => {
 
 exports.get = async (req, res) => {
 	try {
-		const getDetails = await models.Inventory.findAll();
+		const getDetails = await models.Inventory.findAll({
+			include: [{
+				model: models.User,
+				attributes: ['username']
+			}]
+		});
 		return res.json({
 			success: true,
 			message: getDetails

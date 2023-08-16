@@ -92,7 +92,13 @@ exports.getRequest = async (req, res) => {
 		const requests = await models.Request.findAll({
 			where: {
 				stage: res.locals.id
-			}
+			},
+			include: [
+				{
+					model: models.User,
+					attributes: ['username']
+				}
+			]
 		});
 
 		return res.status(200).json({
@@ -107,6 +113,7 @@ exports.getRequest = async (req, res) => {
 		});
 	}
 };
+
 
 exports.approve = async (req, res) => {
 	try {

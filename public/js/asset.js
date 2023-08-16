@@ -290,6 +290,9 @@
 						data: 'id'
 					},
 					{
+						data: "User.username",
+					},
+					{
 						data: "createdAt",
 						render: function (data, type, row) {
 							return formatDate(data);
@@ -365,13 +368,14 @@
 		$('#ApprovalTable').on('click', '.cancelled-complaint-btn', function () {
 			const requestId = $(this).data('id');
 
-			var confirmed = confirm("Are you sure you want to approve this request?");
+			// var confirmed = confirm("Are you sure you want to approve this request?");
 
-			if (!confirmed) {
-				return;
-			}
-
-			updateStatus(requestId, 2, "approved");
+			// if (!confirmed) {
+			// 	return;
+			// }
+			$('#approvalModal').modal('hide');
+			$('#assignAsset').modal('show');
+			// updateStatus(requestId, 2, "approved");
 		});
 	}
 

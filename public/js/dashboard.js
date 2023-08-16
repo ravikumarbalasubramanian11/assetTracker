@@ -112,9 +112,9 @@
 					data: 'spec'
 				},
 				{
-					data: 'UserId',
-					render: function (data, type, row) {
-						return data == null ? "Not Assign":usersDataMap[data] || data;
+					data: 'User.username',
+					render: function (data, row, type){
+						return data? data: "---";
 					}
 				},
 				{
