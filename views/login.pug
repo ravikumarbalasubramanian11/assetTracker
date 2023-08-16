@@ -59,35 +59,5 @@ html
 				label(for='password') Password:
 				input(type='password' name='password' autocomplete='off' required='')
 				input(type='submit' value='Login')
-		script(src='https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js')
-		script.
-			document.getElementById('registrationForm').addEventListener('submit', function(e) {
-			e.preventDefault();
-			const formData = new FormData(e.target);
-			const formDataObject = {};
-			formData.forEach((value, key) => {
-			formDataObject[key] = value;
-			});
-			fetch('http://localhost:3000/api/login', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(formDataObject)
-			})
-			.then(response => response.json())
-			.then(data => {
-			console.log(data);
-			if (data.success) {
-				localStorage.setItem('token', data.token);
-				localStorage.setItem('username', data.username);
-				window.location.href = '/dashboard';
-			} else {
-				const errorMessageElement = document.getElementById('error-message');
-				errorMessageElement.style.display = 'block';
-			}
-			})
-			.catch(error => {
-				console.error(error);
-			});
-			});
+script(src='https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js')
+script(src='/js/login.js')

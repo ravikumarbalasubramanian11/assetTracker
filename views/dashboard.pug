@@ -107,7 +107,6 @@ body
             select#requestType.form-control(required='')
               option(value='') Select Request Type
               option(value='1') Request for Asset
-              option(value='2') Request for Service
           .form-group
             label(for='assetType') Asset Type
             select#assetType.form-control(required='')
@@ -129,22 +128,22 @@ body
             form
               .form-group
                 label(for="assetId") Asset ID
-                input#assetId.form-control(type="text", name="assetId" required)
+                input#assetId1.form-control(type="text", name="assetId" required)
               .form-group
                 label(for="assetName") Asset name
-                input#assetName.form-control(type='text' name='assetName' required='')
+                input#assetName1.form-control(type='text' name='assetName' required='')
               .form-group
                 label(for="manufacturer") Manufacture
-                input#manufacturer.form-control(type="text", name="manufacturer" required)
+                input#manufacturer1.form-control(type="text", name="manufacturer" required)
               .form-group
                 label(for="purchaseDate") Purchase Date
-                input#purchaseDate.form-control(type="date", name="purchaseDate" required)
+                input#purchaseDate1.form-control(type="date", name="purchaseDate" required)
               .form-group
                 label(for="vendorDetails") Vendor Details
-                input#vendorDetails.form-control(type="text", name="vendorDetails" required)
+                input#vendorDetails1.form-control(type="text", name="vendorDetails" required)
               .form-group
                 label(for="specification") Specification
-                textarea#specification.form-control(name="specification" rows="4" required)
+                textarea#specification1.form-control(name="specification" rows="4" required)
           .modal-footer
             button.btn.btn-secondary(type="button" data-dismiss="modal") Close
             button#saveDevice.btn.btn-primary(type="button") Save Device

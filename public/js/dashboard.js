@@ -15,14 +15,15 @@
 
 			if (data.data) {
 				const selectElement = $("#assignedTo");
+				usersDataMap[0] = "None";
 				data.data.forEach(function (user) {
 					usersDataMap[user.id] = user.username;
 				});
 				selectElement.empty();
 
-				data.data.forEach(function (user) {
-					selectElement.append(new Option(user.username, user.id));
-				});
+				for (const userId in usersDataMap) {
+					selectElement.append(new Option(usersDataMap[userId], userId));
+				}
 			} else {
 				console.error("API Error:", data.message);
 			}
@@ -32,19 +33,19 @@
 		}
 	});
 
+
 	$("#myModal").on('click', function () {
 		$("#exampleModal").modal("show");
 	});
 
 	$("#saveDevice").on('click', function () {
-		var assetId = $("#assetId").val();
-		var assetName = $("#assetName").val();
-		var manufacturer = $("#manufacturer").val();
-		var purchaseDate = $("#purchaseDate").val();
-		var vendorDetails = $("#vendorDetails").val();
-		var specification = $("#specification").val();
+		var assetId = $("#assetId1").val();
+		var assetName = $("#assetName1").val();
+		var manufacturer = $("#manufacturer1").val();
+		var purchaseDate = $("#purchaseDate1").val();
+		var vendorDetails = $("#vendorDetails1").val();
+		var specification = $("#specification1").val();
 
-		console.log("000000000000", assetName);
 		$.ajax({
 			url: "http://localhost:3000/api/inventory/create",
 			type: "POST",
@@ -88,21 +89,36 @@
 				url: '/api/inventory/get',
 				dataSrc: 'message',
 			},
-			columns: [
-				{ data: 'id' },
-				{ data: 'assetName' },
-				{ data: 'assetId' },
-				{ data: 'manufacturer' },
-				{ data: 'vendorDetails' },
-				{ data: 'purchaseDate' },
-				{ data: 'spec' },
+			columns: [{
+					data: 'id'
+				},
+				{
+					data: 'assetName'
+				},
+				{
+					data: 'assetId'
+				},
+				{
+					data: 'manufacturer'
+				},
+				{
+					data: 'vendorDetails'
+				},
+				{
+					data: 'purchaseDate'
+				},
+				{
+					data: 'spec'
+				},
 				{
 					data: 'UserId',
 					render: function (data, type, row) {
 						return usersDataMap[data] || data;
 					}
 				},
-				{ data: 'status' },
+				{
+					data: 'status'
+				},
 				{
 					data: 'UserId',
 					render: function (data, type, row) {
@@ -181,10 +197,15 @@
 			var confirmation = confirm('Are you sure you want to delete ' + rowData.assetName + '?');
 
 			if (confirmation) {
+				var loadingIcon = $('<img src="loading.gif" alt="Loading..." />');
+				$(this).after(loadingIcon);
+
 				$.ajax({
 					url: 'http://localhost:3000/api/inventory/delete/' + rowData.id,
 					type: 'DELETE',
 					success: function (response) {
+						loadingIcon.remove();
+
 						if (response.success) {
 							alert('Delete operation for ' + rowData.assetName + ' is confirmed!');
 							table.ajax.reload();
@@ -193,13 +214,14 @@
 						}
 					},
 					error: function (xhr, textStatus, error) {
+						loadingIcon.remove();
 						alert('Error during delete operation: ' + error);
 					}
 				});
 			}
 		});
-	}
-	else {
+
+	} else {
 		$('#myTable').hide();
 	}
 })()
