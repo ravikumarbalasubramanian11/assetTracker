@@ -49,3 +49,7 @@ body {
 .login-form input[type="submit"]:hover {
 	background-color: #0056b3;
 }
+
+#input-login{
+	width:94% !important;
+}

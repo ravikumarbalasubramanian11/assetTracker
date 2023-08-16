@@ -36,7 +36,6 @@
 		}
 	});
 
-
 	$("#myModal").on('click', function () {
 		$("#exampleModal").modal("show");
 	});
@@ -115,7 +114,7 @@
 				{
 					data: 'UserId',
 					render: function (data, type, row) {
-						return usersDataMap[data] || data;
+						return data == null ? "Not Assign":usersDataMap[data] || data;
 					}
 				},
 				{
