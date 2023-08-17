@@ -40,6 +40,7 @@ body
 							th Status
 							<th class="admin-only">Action</th>
 					tbody
+
 	#editModal.modal(tabindex='-1' role='dialog')
 		.modal-dialog(role='document')
 			.modal-content
@@ -114,37 +115,132 @@ body
 						span(aria-hidden="true") &times;
 				.modal-body
 					form
-						.form-group
-							label(for="assetId") Serial No
-							input#assetId1.form-control(type="text" name="assetId" autocomplete="off" required)
-						.form-group
-							label(for="assetName") Asset name
-							input#assetName1.form-control(type='text' name='assetName' autocomplete="off" required='')
-						.form-group
-							label(for="manufacturer") Manufacture
-							input#manufacturer1.form-control(type="text" name="manufacturer" autocomplete="off" required)
-						.form-group
-							label(for="purchaseDate") Purchase Date
-							input#purchaseDate1.form-control(type="date" name="purchaseDate" autocomplete="off" required)
-						.form-group
-							label(for="vendorDetails") Vendor Details
-							input#vendorDetails1.form-control(type="text" name="vendorDetails" autocomplete="off" required)
-						.form-group
-							label(for='assetType') Asset Type
-							select#assetType1.form-control(required='' autocomplete="off")
-								option(value='') Select Asset Type
-								option(value='1') Laptop
-								option(value='2') PC
-								option(value='3') Mobile 
-								option(value="4") Charger 
-								option(value='5') Keyboard 
-								option(value="6") Mouse
-						.form-group
-							label(for="specification") Specification
-							textarea#specification1.form-control(name="specification" rows="4" autocomplete="off" required)
-				.modal-footer
-					button.btn.btn-secondary(type="button" data-dismiss="modal") Close
-					button#saveDevice.btn.btn-primary(type="button") Save Device
+					.row
+						.col-md-12
+							.form-group
+								label(for="assetId") Serial No 
+								input#assetId-create.form-control(type="text" name="assetId" autocomplete="off" required)
+						.col-md-6
+							.form-group
+								label(for="manufacturer") Brand
+								input#manufacturer-create.form-control(type="text" name="manufacturer" autocomplete="off" placeholder="Apple" required)
+						.col-md-6
+							.form-group
+								label(for="assetName") Model Name
+								input#assetName-create.form-control(type='text' name='assetName' placeholder="Mac Book air" autocomplete="off" required='')
+						.col-md-6
+							.form-group
+								label(for="purchaseDate") Purchase Date
+								input#purchaseDate-create.form-control(type="date" name="purchaseDate" min="2020-01-01" max="" autocomplete="off" required)
+						.col-md-6
+							.form-group
+								label(for="vendorDetails") Vendor Details
+								input#vendorDetails-create.form-control(type="text" name="vendorDetails" autocomplete="off" placeholder="Amazon Online Store" required)
+						.col-md-12
+							.form-group
+								label(for='assetType') Asset Type
+								select#assetType-create.form-control(required='' autocomplete="off")
+									option(value='') Select Asset Type
+									option(value='1') Laptop
+									option(value='2') PC
+									option(value='3') Mobile 
+									option(value="4") Charger 
+									option(value='5') Keyboard 
+									option(value="6") Mouse
+						.col-md-12 
+							#pcDetails(style='display:none;')
+								.row
+									.col-md-6
+										.form-group
+											label(for='screenSize') Screen Size
+											select#screenSize-create.form-control
+												option(value='') Select Screen Size
+												option(value="13 inch") 13 inch
+												option(value="15 inch") 15 inch
+												option(value="17 inch") 17 inch
+							#mobileDetails(style='display:none;')
+								.row 
+									.col-md-6
+										.form-group
+											label(for='ram-mobile') Mobile RAM
+											select#ram-mobile-create.form-control
+												option(value='') Select Mobile RAM
+												option(value='2GB') 2GB
+												option(value='4GB') 4GB
+												option(value='6GB') 6GB
+									.col-md-6
+										.form-group
+											label(for='internalStorage-mobile') Mobile Internal Storage
+											select#internalStorage-mobile-create.form-control
+												option(value='') Select Mobile Internal Storage
+												option(value='32GB') 32GB
+												option(value='64GB') 64GB
+												option(value='128GB') 128GB
+							#laptopDetails(style='display: none;')
+								.row
+									.col-md-12
+										.form-group
+											label(for='ram') RAM
+											select#ram-create.form-control
+												option(value='') Select RAM
+												option(value='4GB') 4GB
+												option(value='8GB') 8GB
+												option(value='16GB') 16GB
+									.col-md-6
+										.form-group
+											label(for='internalStorage') Internal Storage
+											select#internalStorage-create.form-control
+												option(value='') Select Internal Storage
+												option(value='256GB') 256GB
+												option(value='512GB') 512GB
+												option(value='1TB') 1TB
+									.col-md-6
+										.form-group
+											label(for='cpuModel') CPU Model
+											select#cpuModel-create.form-control
+												option(value='') Select CPU Model
+												option(value='Core i3') Core i3
+												option(value='Core i5') Core i5
+												option(value='Core i7') Core i7
+									.col-md-6 
+										.form-group
+											label(for='screenSize') Screen Size
+											select#screenSize-laptop-create.form-control
+												option(value='') Select Screen Size
+												option(value="13 inch") 13 inch
+												option(value="15 inch") 15 inch
+												option(value="17 inch") 17 inch
+							#chargerDetails(style='display: none;')
+								.row
+									.col-md-6
+										.form-group
+											label(for='chargerVoltage') Charger Voltage
+											select#chargerVoltage-create.form-control
+												option(value='') Select Charger Voltage
+												option(value='110V') 110V
+												option(value='220V') 220V
+							#keyboardDetails(style='display: none;')
+								.row
+									.col-md-6
+										.form-group
+											label(for='keyboardLayout') Keyboard Layout
+											select#keyboardLayout-create.form-control
+												option(value='') Select Keyboard Layout
+												option(value='QWERTY') QWERTY
+												option(value='AZERTY') AZERTY
+							#mouseDetails(style='display: none;')
+								.row
+									.col-md-6
+										.form-group
+											label(for='mouseType') Mouse Type
+											select#mouseType-create.form-control
+												option(value='') Select Mouse Type
+												option(value='Wired') Wired
+												option(value='Wireless') Wireless
+					.modal-footer
+						button.btn.btn-secondary(type="button" data-dismiss="modal") Close
+						button#saveDevice.btn.btn-primary(type="button") Save Device
+
 script(type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js')
 script(src='https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js')
 script(type='text/javascript' charset='utf8' src='https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js')

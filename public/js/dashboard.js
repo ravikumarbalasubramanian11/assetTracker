@@ -3,6 +3,41 @@
 	var DisplayUsername = username.charAt(0).toUpperCase() + username.slice(1);
 	$("#username").text(DisplayUsername || "Default Username");
 
+	const purchaseDateInput = document.getElementById("purchaseDate-create");
+	const currentDate = new Date().toISOString().split("T")[0];
+	purchaseDateInput.setAttribute("max", currentDate);
+
+	const assetTypeSelect = document.getElementById("assetType-create");
+	const laptopDetails = document.getElementById("laptopDetails");
+	const pcDetails = document.getElementById("pcDetails");
+	const mobileDetails = document.getElementById("mobileDetails");
+	const chargerDetails = document.getElementById("chargerDetails");
+	const keyboardDetails = document.getElementById("keyboardDetails");
+	const mouseDetails = document.getElementById("mouseDetails");
+
+	assetTypeSelect.addEventListener("change", function () {
+		laptopDetails.style.display = "none";
+		pcDetails.style.display = "none";
+		chargerDetails.style.display = "none";
+		keyboardDetails.style.display = "none";
+		mobileDetails.style.display = "none";
+		mouseDetails.style.display = "none";
+
+		if (assetTypeSelect.value === "1") {
+			laptopDetails.style.display = "block";
+		} else if (assetTypeSelect.value === "2") {
+			pcDetails.style.display = "block";
+		} else if (assetTypeSelect.value === "3") {
+			mobileDetails.style.display = "block";
+		} else if (assetTypeSelect.value === "4") {
+			chargerDetails.style.display = "block";
+		} else if (assetTypeSelect.value === "5") {
+			keyboardDetails.style.display = "block";
+		} else if (assetTypeSelect.value === "6") {
+			mouseDetails.style.display = "block";
+		}
+	});
+
 	var usersDataMap = {};
 	var editedRowData;
 
@@ -50,26 +85,64 @@
 	});
 
 	$("#saveDevice").on('click', function () {
-		var assetId = $("#assetId1").val();
-		var assetName = $("#assetName1").val();
-		var manufacturer = $("#manufacturer1").val();
-		var purchaseDate = $("#purchaseDate1").val();
-		var vendorDetails = $("#vendorDetails1").val();
-		var specification = $("#specification1").val();
-		var assetType = $("#assetType1").val();
+		const assetId = $("#assetId-create").val();
+		const manufacturer = $("#manufacturer-create").val();
+		const assetName = $("#assetName-create").val();
+		const purchaseDate = $("#purchaseDate-create").val();
+		const vendorDetails = $("#vendorDetails-create").val();
+		const assetType = $("#assetType-create").val();
+
+		let data = {
+			assetId: assetId,
+			assetName: assetName,
+			manufacturer: manufacturer,
+			purchaseDate: purchaseDate,
+			vendorDetails: vendorDetails,
+			assetType: assetType,
+			spec: {}
+		};
+
+		if (assetType === "1") {
+			const ram = $("#ram-create").val();
+			const internalStorage = $("#internalStorage-create").val();
+			const cpuModel = $("#cpuModel-create").val();
+			const screenSize = $("#screenSize-laptop-create").val();
+
+			data.spec.ram = ram;
+			data.spec.internalStorage = internalStorage;
+			data.spec.cpuModel = cpuModel;
+			data.spec.screenSize = screenSize;
+		} else if (assetType === "2") {
+			const screenSize = $("#screenSize-create").val();
+
+			data.spec.screenSize = screenSize;
+		} else if (assetType === "3") {
+			const mobileRAM = $("#ram-mobile-create").val();
+			const mobileInternalStorage = $("#internalStorage-mobile-create").val();
+
+			data.spec.mobileRAM = mobileRAM;
+			data.spec.mobileInternalStorage = mobileInternalStorage;
+		} else if (assetType === "4") {
+			const chargerVoltage = $("#chargerVoltage-create").val();
+
+			data.spec.chargerVoltage = chargerVoltage;
+		} else if (assetType === "5") {
+			const keyboardLayout = $("#keyboardLayout-create").val();
+
+			data.spec.keyboardLayout = keyboardLayout;
+		} else if (assetType === "6") {
+			const mouseType = $("#mouseType-create").val();
+
+			data.spec.mouseType = mouseType;
+		}
+
+		console.log(data)
 
 		$.ajax({
 			url: "http://localhost:3000/api/inventory/create",
 			type: "POST",
-			data: {
-				assetId: assetId,
-				assetName: assetName,
-				manufacturer: manufacturer,
-				purchaseDate: purchaseDate,
-				vendorDetails: vendorDetails,
-				spec: specification,
-				assetType: assetType
-			},
+			data: JSON.stringify(data),
+			contentType: "application/json",
 			success: function (response) {
 				console.log(response);
 				if (response.success) {
@@ -126,7 +199,18 @@
 					data: 'purchaseDate'
 				},
 				{
-					data: 'spec'
+					data: 'spec',
+					render: function (data, type, row) {
+						var specifications = data;
+						var renderedSpec = '';
+
+						for (var key in specifications) {
+							if (specifications.hasOwnProperty(key)) {
+								renderedSpec += key + ': ' + (specifications[key] ? specifications[key] : 'null') + ',<br>';
+							}
+						}
+						return renderedSpec;
+					}
 				},
 				{
 					data: 'User.username',

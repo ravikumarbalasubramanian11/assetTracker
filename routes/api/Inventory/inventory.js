@@ -48,7 +48,7 @@ exports.create = async (req, res) => {
 				message: 'Spec is required'
 			})
 		}
-		if (!assetType) {
+		if (!assetType || assetType <= 0) {
 			return res.send({
 				success: false,
 				message: 'Asset Type is required'

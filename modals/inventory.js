@@ -21,7 +21,7 @@ module.exports = (sequelize, Sequelize) => {
 			type: Sequelize.DATEONLY
 		},
 		spec: {
-			type: Sequelize.STRING
+			type: Sequelize.JSONB
 		},
 		status: {
 			type: Sequelize.ENUM('Active', 'Inactive', 'UnderService'),
