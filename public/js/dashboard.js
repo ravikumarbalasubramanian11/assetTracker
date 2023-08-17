@@ -40,7 +40,6 @@
 
 	var usersDataMap = {};
 	var editedRowData;
-
 	var assetTypes = {
 		1: "Laptop",
 		2: "PC",
@@ -235,17 +234,106 @@
 		$('#myTable').on('click', '.btn-edit', function () {
 			var rowData = table.row($(this).parents('tr')).data();
 
-			$('#editModal #assetId').val(rowData.assetId);
-			$('#editModal #assetName').val(rowData.assetName);
-			$('#editModal #manufacturer').val(rowData.manufacturer);
-			$('#editModal #purchaseDate').val(rowData.purchaseDate);
-			$('#editModal #vendorDetails').val(rowData.vendorDetails);
-			$('#editModal #specification').val(rowData.spec);
+			$('#editModal #assetId-edit').val(rowData.assetId);
+			$('#editModal #assetName-edit').val(rowData.assetName);
+			$('#editModal #manufacturer-edit').val(rowData.manufacturer);
+			$('#editModal #purchaseDate-edit').val(rowData.purchaseDate);
+			$('#editModal #vendorDetails-edit').val(rowData.vendorDetails);
 			$('#editModal #status').val(rowData.status);
 			$("#editModal #assignedTo").val(rowData.UserId);
-			editedRowData = rowData;
+
+			hideAllDetails();
+
+			if (rowData.assetType === 1) {
+				$('#laptopDetails-edit').show();
+
+				if (rowData.spec) {
+					$('#editModal #ram-edit').val(rowData.spec.ram);
+					$('#editModal #cpuModel-edit').val(rowData.spec.cpuModel);
+					$('#editModal #screenSize-laptop-edit').val(rowData.spec.screenSize);
+					$('#editModal #internalStorage-edit').val(rowData.spec.internalStorage);
+				} else {
+					clearLaptopDetails();
+				}
+			} else if (rowData.assetType === 2) {
+				$('#pcDetails-edit').show();
+
+				if (rowData.spec) {
+					$("#editModal #screenSize-edit").val(rowData.spec.screenSize);
+				} else {
+					clearPcDetails();
+				}
+			} else if (rowData.assetType === 3) {
+				$('##mobileDetails-edit').show();
+
+				if (rowData.spec) {
+					$('#internalStorage-mobile-edit').show(rowData.spec.mobileInternalStorage);
+					$('#ram-mobile-edit').show(rowData.spec.mobileRAM);
+				} else {
+					clearMobileDetails()
+				}
+			} else if (rowData.assetType === 4) {
+				$('#chargerDetails-edit').show();
+				if (rowData.spec) {
+					$('#editModal #chargerVoltage-edit').val(rowData.spec.chargerVoltage);
+				} else {
+					clearChargerDetails();
+				}
+			} else if (rowData.assetType === 5) {
+				$('#keyboardDetails-edit').show();
+
+				if (rowData.spec) {
+					$('#editModal #keyBoardLayout-edit').val(rowData.spec.keyboardLayout);
+				} else {
+					clearKeyboardDetails();
+				}
+			} else if (rowData.assetType === 6) {
+				$('#mouseDetails-edit').show();
+				if (rowData.spec) {
+					$('#editModal #mouseType-edit').val(rowData.spec.mouseType);
+				} else {
+					clearMouseDetails();
+				}
+			}
 			$('#editModal').modal('show');
 		});
+
+		function hideAllDetails() {
+			$('#laptopDetails-edit').hide();
+			$('#pcDetails-edit').hide();
+			$('#mobileDetails-edit').hide();
+			$('#chargerDetails-edit').hide();
+			$('#keyboardDetails-edit').hide();
+			$('#mouseDetails-edit').hide();
+		}
+
+		function clearLaptopDetails() {
+			$('#editModal #ram-edit').val('');
+			$('#editModal #cpuModel-edit').val('');
+			$('#editModal #screenSize-laptop-edit').val('');
+			$('#editModal #internalStorage-edit').val('');
+		}
+
+		function clearPcDetails() {
+			$("#editModal #screenSize-edit").val("");
+		}
+
+		function clearKeyboardDetails() {
+			$("#editModal #keyBoardLayout-edit").val("");
+		}
+
+		function clearMobileDetails() {
+			$('#internalStorage-mobile-edit').show("");
+			$('#ram-mobile-edit').show(rowData.spec.mobileRAM);
+		}
+
+		function clearMouseDetails() {
+			$("#editModal #mouseType-edit").val("");
+		}
+
+		function clearChargerDetails() {
+			$('#editModal #chargerVoltage-edit').val('');
+		}
 
 		$('#saveEdit').on('click', function () {
 			var updatedAssetId = $('#editModal #assetId').val();

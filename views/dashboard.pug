@@ -32,7 +32,7 @@ body
 							th Asset Name
 							th Asset Id
 							th Asset Type
-							th Manufacturer
+							th Brand
 							th Vendor Details
 							th Purchase Date
 							th Specification
@@ -41,47 +41,140 @@ body
 							<th class="admin-only">Action</th>
 					tbody
 
-	#editModal.modal(tabindex='-1' role='dialog')
-		.modal-dialog(role='document')
+	.modal.fade#editModal(tabindex="-1" role="dialog" aria-labelledby="#editModalLabel" aria-hidden="true")
+		.modal-dialog(role="document")
 			.modal-content
 				.modal-header
-					h5.modal-title Edit Device
-					button.close(type='button' data-dismiss='modal' aria-label='Close')
-						span(aria-hidden='true') ×
+					h5.modal-title#editModalLabel Edit Device
+					button.close(type="button" data-dismiss="modal" aria-label="Close")
+						span(aria-hidden="true") &times;
 				.modal-body
 					form
-						.form-group
-							label(for='assetId') Asset ID
-							input#assetId.form-control(type='text')
-						.form-group
-							label(for='assetName') Asset Name
-							input#assetName.form-control(type='text')
-						.form-group
-							label(for='manufacturer') Manufacturer
-							input#manufacturer.form-control(type='text')
-						.form-group
-							label(for='purchaseDate') Purchase Date
-							input#purchaseDate.form-control(type='date')
-						.form-group
-							label(for='vendorDetails') Vendor Details
-							input#vendorDetails.form-control(type='text')
-						.form-group
-							label(for='specification') Specification
-							textarea#specification.form-control(rows='4')
-						.form-group
-							label(for='status') Status
-							select#status.form-control(name='status')
-								option(value='Active') Active
-								option(value='Inactive') Inactive
-								option(value='UnderService') UnderService
-						.form-group
-							label(for='assignedTo') Assigned to
-							select#assignedTo.form-control(name='assignedTo')
-								option(value='' disabled='' selected='') Select an option
-
-				.modal-footer
-					button.btn.btn-secondary(type='button' data-dismiss='modal') Close
-					button#saveEdit.btn.btn-primary(type='button') Save Changes
+					.row
+						.col-md-12
+							.form-group
+								label(for="assetId") Serial No 
+								input#assetId-edit.form-control(type="text" name="assetId" autocomplete="off" required)
+						.col-md-6
+							.form-group
+								label(for="manufacturer") Brand
+								input#manufacturer-edit.form-control(type="text" name="manufacturer" autocomplete="off" placeholder="Apple" required)
+						.col-md-6
+							.form-group
+								label(for="assetName") Model Name
+								input#assetName-edit.form-control(type='text' name='assetName' placeholder="Mac Book air" autocomplete="off" required='')
+						.col-md-6
+							.form-group
+								label(for="purchaseDate") Purchase Date
+								input#purchaseDate-edit.form-control(type="date" name="purchaseDate" min="2020-01-01" max="" autocomplete="off" required)
+						.col-md-6
+							.form-group
+								label(for="vendorDetails") Vendor Details
+								input#vendorDetails-edit.form-control(type="text" name="vendorDetails" autocomplete="off" placeholder="Amazon Online Store" required)
+						.col-md-12
+							.form-group
+								label(for='assetType') Asset Type
+								select#assetType-edit.form-control(required='' autocomplete="off" readOnly)
+									option(value='') Select Asset Type
+									option(value='1') Laptop
+									option(value='2') PC
+									option(value='3') Mobile 
+									option(value="4") Charger 
+									option(value='5') Keyboard 
+									option(value="6") Mouse
+						.col-md-12 
+							#pcDetails-edit(style='display:none;')
+								.row
+									.col-md-6
+										.form-group
+											label(for='screenSize') Screen Size
+											select#screenSize-edit.form-control
+												option(value='') Select Screen Size
+												option(value="13 inch") 13 inch
+												option(value="15 inch") 15 inch
+												option(value="17 inch") 17 inch
+							#mobileDetails-edit(style='display:none;')
+								.row
+									.col-md-6
+										.form-group
+											label(for='ram-mobile') Mobile RAM
+											select#ram-mobile-edit.form-control
+												option(value='') Select Mobile RAM
+												option(value='2GB') 2GB
+												option(value='4GB') 4GB
+												option(value='6GB') 6GB
+									.col-md-6
+										.form-group
+											label(for='internalStorage-mobile') Mobile Internal Storage
+											select#internalStorage-mobile-edit.form-control
+												option(value='') Select Mobile Internal Storage
+												option(value='32GB') 32GB
+												option(value='64GB') 64GB
+												option(value='128GB') 128GB
+							#laptopDetails-edit(style='display: none;')
+								.row
+									.col-md-12
+										.form-group
+											label(for='ram') RAM
+											select#ram-edit.form-control
+												option(value='') Select RAM
+												option(value='4GB') 4GB
+												option(value='8GB') 8GB
+												option(value='16GB') 16GB
+									.col-md-6
+										.form-group
+											label(for='internalStorage') Internal Storage
+											select#internalStorage-edit.form-control
+												option(value='') Select Internal Storage
+												option(value='256GB') 256GB
+												option(value='512GB') 512GB
+												option(value='1TB') 1TB
+									.col-md-6
+										.form-group
+											label(for='cpuModel') CPU Model
+											select#cpuModel-edit.form-control
+												option(value='') Select CPU Model
+												option(value='Core i3') Core i3
+												option(value='Core i5') Core i5
+												option(value='Core i7') Core i7
+									.col-md-6 
+										.form-group
+											label(for='screenSize') Screen Size
+											select#screenSize-laptop-edit.form-control
+												option(value='') Select Screen Size
+												option(value="13 inch") 13 inch
+												option(value="15 inch") 15 inch
+												option(value="17 inch") 17 inch
+							#chargerDetails-edit(style='display: none;')
+								.row
+									.col-md-6
+										.form-group
+											label(for='chargerVoltage') Charger Voltage
+											select#chargerVoltage-edit.form-control
+												option(value='') Select Charger Voltage
+												option(value='110V') 110V
+												option(value='220V') 220V
+							#keyboardDetails-edit(style='display: none;')
+								.row
+									.col-md-6
+										.form-group
+											label(for='keyboardLayout') Keyboard Layout
+											select#keyboardLayout-edit.form-control
+												option(value='') Select Keyboard Layout
+												option(value='QWERTY') QWERTY
+												option(value='AZERTY') AZERTY
+							#mouseDetails-edit(style='display: none;')
+								.row
+									.col-md-6
+										.form-group
+											label(for='mouseType') Mouse Type
+											select#mouseType-edit.form-control
+												option(value='') Select Mouse Type
+												option(value='Wired') Wired
+												option(value='Wireless') Wireless
+					.modal-footer
+						button.btn.btn-secondary(type="button" data-dismiss="modal") Close
+						button#saveEdit.btn.btn-primary(type="button") Save Device
 
 	#requestModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='requestModalLabel' aria-hidden='true')
 		.modal-dialog(role='document')
