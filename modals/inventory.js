@@ -24,7 +24,7 @@ module.exports = (sequelize, Sequelize) => {
 			type: Sequelize.JSONB
 		},
 		status: {
-			type: Sequelize.ENUM('Active', 'Inactive', 'UnderService'),
+			type: Sequelize.ENUM('Available', 'UnderService', 'Scrap', 'Lost'),
 		}
 	});
 

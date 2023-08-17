@@ -39,7 +39,6 @@
 	});
 
 	var usersDataMap = {};
-	var editedRowData;
 	var assetTypes = {
 		1: "Laptop",
 		2: "PC",
@@ -205,9 +204,16 @@
 
 						for (var key in specifications) {
 							if (specifications.hasOwnProperty(key)) {
-								renderedSpec += key + ': ' + (specifications[key] ? specifications[key] : 'null') + ',<br>';
+								var formattedKey = key.charAt(0).toUpperCase() + key.slice(1);
+								var formattedValue = specifications[key] ? specifications[key] : 'null';
+								renderedSpec += formattedKey + ': ' + formattedValue + ',<br>';
 							}
 						}
+
+						renderedSpec = renderedSpec.replace(/,([a-z])/g, function (letter) {
+							return ', ' + letter.toUpperCase();
+						});
+
 						return renderedSpec;
 					}
 				},
@@ -232,15 +238,15 @@
 		});
 
 		$('#myTable').on('click', '.btn-edit', function () {
-			var rowData = table.row($(this).parents('tr')).data();
+			rowData = table.row($(this).parents('tr')).data();
 
 			$('#editModal #assetId-edit').val(rowData.assetId);
 			$('#editModal #assetName-edit').val(rowData.assetName);
 			$('#editModal #manufacturer-edit').val(rowData.manufacturer);
 			$('#editModal #purchaseDate-edit').val(rowData.purchaseDate);
 			$('#editModal #vendorDetails-edit').val(rowData.vendorDetails);
-			$('#editModal #status').val(rowData.status);
-			$("#editModal #assignedTo").val(rowData.UserId);
+			$("#editModal #assetType-edit").val(rowData.assetType);
+			$('#editModal #status-edit').val(rowData.status);
 
 			hideAllDetails();
 
@@ -283,7 +289,7 @@
 				$('#keyboardDetails-edit').show();
 
 				if (rowData.spec) {
-					$('#editModal #keyBoardLayout-edit').val(rowData.spec.keyboardLayout);
+					$('#keyboardLayout-edit').val(rowData.spec.keyboardLayout); // Use the correct ID here
 				} else {
 					clearKeyboardDetails();
 				}
@@ -318,58 +324,81 @@
 			$("#editModal #screenSize-edit").val("");
 		}
 
+		function clearChargerDetails() {
+			$('#editModal #chargerVoltage-edit').val('');
+		}
+
 		function clearKeyboardDetails() {
 			$("#editModal #keyBoardLayout-edit").val("");
 		}
 
 		function clearMobileDetails() {
-			$('#internalStorage-mobile-edit').show("");
-			$('#ram-mobile-edit').show(rowData.spec.mobileRAM);
+			$('#internalStorage-mobile-edit').val("");
+			$('#ram-mobile-edit').val("");
 		}
 
 		function clearMouseDetails() {
 			$("#editModal #mouseType-edit").val("");
 		}
 
-		function clearChargerDetails() {
-			$('#editModal #chargerVoltage-edit').val('');
-		}
-
 		$('#saveEdit').on('click', function () {
-			var updatedAssetId = $('#editModal #assetId').val();
-			var updatedAssetName = $('#editModal #assetName').val();
-			var updatedManufacturer = $('#editModal #manufacturer').val();
-			var updatedPurchaseDate = $('#editModal #purchaseDate').val();
-			var updatedVendorDetails = $('#editModal #vendorDetails').val();
-			var updatedSpecification = $('#editModal #specification').val();
-			var updatedStatus = $('#editModal #status').val();
-			var updatedAssignee = $("#editModal #assignedTo").val();
-
-			if (!editedRowData) {
+			if (!rowData) {
 				alert('Error: No row data found.');
 				return;
 			}
 
+			var editedData = {
+				assetId: $('#editModal #assetId-edit').val(),
+				assetName: $('#editModal #assetName-edit').val(),
+				manufacturer: $('#editModal #manufacturer-edit').val(),
+				purchaseDate: $('#editModal #purchaseDate-edit').val(),
+				vendorDetails: $('#editModal #vendorDetails-edit').val(),
+				assetType: $("#editModal #assetType-edit").val(),
+				status: $('#editModal #status-edit').val()
+			};
+
+			if (editedData.assetType === "1") {
+				editedData.spec = {
+					ram: $('#editModal #ram-edit').val(),
+					cpuModel: $('#editModal #cpuModel-edit').val(),
+					screenSize: $('#editModal #screenSize-laptop-edit').val(),
+					internalStorage: $('#editModal #internalStorage-edit').val()
+				};
+			} else if (editedData.assetType === "2") {
+				editedData.spec = {
+					screenSize: $('#editModal #screenSize-edit').val()
+				};
+			} else if (editedData.assetType === "3") {
+				editedData.spec = {
+					mobileInternalStorage: $('#internalStorage-mobile-edit').val(),
+					mobileRAM: $('#ram-mobile-edit').val()
+				};
+			} else if (editedData.assetType === "4") {
+				editedData.spec = {
+					chargerVoltage: $('#editModal #chargerVoltage-edit').val()
+				};
+			} else if (editedData.assetType === "5") {
+				editedData.spec = {
+					keyboardLayout: $('#keyboardLayout-edit').val()
+				};
+			} else if (editedData.assetType === "6") {
+				editedData.spec = {
+					mouseType: $('#editModal #mouseType-edit').val()
+				};
+			}
+
+			console.log(editedData);
+
 			$.ajax({
-				url: 'http://localhost:3000/api/inventory/edit/' + editedRowData.id,
+				url: 'http://localhost:3000/api/inventory/edit/' + rowData.id,
 				type: 'PUT',
-				data: {
-					assetId: updatedAssetId,
-					assetName: updatedAssetName,
-					manufacturer: updatedManufacturer,
-					purchaseDate: updatedPurchaseDate,
-					vendorDetails: updatedVendorDetails,
-					spec: updatedSpecification,
-					status: updatedStatus,
-					UserId: updatedAssignee,
-				},
+				data: editedData,
 				success: function (response) {
 					console.log(response);
 					if (response.success) {
 						table.ajax.reload();
 						alert("Successfully Saved the changes");
 						$('#editModal').modal('hide');
-
 					} else {
 						alert('Failed to save changes: ' + response.message);
 					}

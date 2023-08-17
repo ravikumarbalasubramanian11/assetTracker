@@ -71,17 +71,16 @@ body
 							.form-group
 								label(for="vendorDetails") Vendor Details
 								input#vendorDetails-edit.form-control(type="text" name="vendorDetails" autocomplete="off" placeholder="Amazon Online Store" required)
-						.col-md-12
-							.form-group
-								label(for='assetType') Asset Type
-								select#assetType-edit.form-control(required='' autocomplete="off" readOnly)
-									option(value='') Select Asset Type
-									option(value='1') Laptop
-									option(value='2') PC
-									option(value='3') Mobile 
-									option(value="4") Charger 
-									option(value='5') Keyboard 
-									option(value="6") Mouse
+						.col-md-12.form-group
+							label(for='assetType') Asset Type
+							select#assetType-edit.form-control(required='' autocomplete='off' disabled='')
+								option(value='') Select Asset Type
+								option(value='1') Laptop
+								option(value='2') PC
+								option(value='3') Mobile
+								option(value='4') Charger
+								option(value='5') Keyboard
+								option(value='6') Mouse
 						.col-md-12 
 							#pcDetails-edit(style='display:none;')
 								.row
@@ -172,6 +171,15 @@ body
 												option(value='') Select Mouse Type
 												option(value='Wired') Wired
 												option(value='Wireless') Wireless
+						.col-md-6
+							.form-group
+								label(for='status') Status
+								select#status-edit.form-control
+									option(value='') Select Status
+									option(value='Available') Available
+									option(value='UnderService') UnderService
+									option(value='Lost') Lost
+									option(value='Scrap') Scrap
 					.modal-footer
 						button.btn.btn-secondary(type="button" data-dismiss="modal") Close
 						button#saveEdit.btn.btn-primary(type="button") Save Device

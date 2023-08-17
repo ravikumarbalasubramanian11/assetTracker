@@ -1,4 +1,7 @@
 const models = require("../../../modals");
+const {
+	Op
+} = require('sequelize');
 
 exports.create = async (req, res) => {
 	try {
@@ -63,7 +66,7 @@ exports.create = async (req, res) => {
 			vendorDetails: vendorDetails,
 			assetType: assetType,
 			spec: spec,
-			status: "Active"
+			status: "Available"
 		})
 
 		if (!create) {
@@ -181,6 +184,8 @@ exports.edit = async (req, res) => {
 			UserId
 		} = req.body;
 
+		console.log(req.body)
+
 		const assetEdit = await models.Inventory.update({
 			assetName: assetName,
 			assetId: assetId,
@@ -195,8 +200,6 @@ exports.edit = async (req, res) => {
 				id: id
 			}
 		});
-
-		console.log(assetEdit);
 
 		if (assetEdit[0] === 0) {
 			return res.status(404).json({
@@ -246,3 +249,38 @@ exports.unassigned = async (req, res) => {
 		});
 	}
 }
+
+exports.itemsList = async (req, res) => {
+	try {
+		let counts = await models.Inventory.findAll({
+			attributes: ['status', [models.sequelize.fn('COUNT', 'status'), 'count']],
+			where: {
+				status: {
+					[Op.or]: ['Available', 'UnderService', 'Scrap', 'Lost']
+				}
+			},
+			group: 'status'
+		});
+
+		console.log(counts);
+
+		const statusCounts = {};
+		counts.forEach(item => {
+			statusCounts[item.status] = item.dataValues.count;
+		});
+
+		return res.status(200).json({
+			success: true,
+			data: statusCounts
+		});
+
+	} catch (error) {
+		console.log({
+			success: false,
+			message: error
+		});
+		return res.status(500).json({
+			error: `Internal Server Error ${error}`
+		});
+	}
+};
